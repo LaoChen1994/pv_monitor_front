@@ -1,47 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import { getPlotCurve, getModuleDataNumber } from './api';
-import { plotData } from './interface';
+import React, { useEffect, useState, ReactNode } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { routes } from './constant';
+import { INavItem } from './interface';
 
 const App: React.FC = () => {
-  const [curveId, setCurveId] = useState<number>(1);
-  const [curveData, setCurveData] = useState<plotData[]>([]);
+  const renderNav = (elem: INavItem, index: number): ReactNode => {
+    const { urlMatch, name } = elem;
 
-  useEffect(() => {
-    async function getCurveInfo(id: number) {
-      const { data: plotData } = await getPlotCurve(id);
-      const { temperature, irradiance, plot_data, work_status, pk } = plotData;
-      setCurveData(plot_data);
-    }
-    getCurveInfo(curveId);
-  }, [curveId]);
-
-  useEffect(() => {
-    async function getNumber(moduleTypes: string) {
-      const { data } = await getModuleDataNumber(moduleTypes);
-      const { count } = data;
-      console.log(count);
-    }
-
-    getNumber('xSi11246');
-  }, []);
-
-  const addCurveId = () => {
-    const id = curveId + 1;
-    setCurveId(id);
+    return (
+      <>
+        <Link to={urlMatch} key={index}>
+          {name}
+        </Link>
+      </>
+    );
   };
+
+  const renderNavItem = (elem: INavItem, index: number): ReactNode => {
+    const { urlMatch, isExact, component: Component } = elem;
+    return (
+      <>
+        {isExact ? (
+          <Route path={urlMatch}>
+            <Component></Component>
+          </Route>
+        ) : (
+          <Route path={urlMatch} exact>
+            <Component></Component>
+          </Route>
+        )}
+      </>
+    );
+  };
+
+  // const render
 
   return (
     <div className="App">
-      <button onClick={addCurveId}>+1</button>
-      <ul>
-        {curveData.map((elem, index) => (
-          <li key={index}>
-            {elem[0]} / {elem[1]}
-          </li>
-        ))}
-      </ul>
+      <Router>
+        <nav>
+          <div>{routes.map((elem, index) => renderNav(elem, index))}</div>
+        </nav>
+        <Switch>
+          <div>{routes.map((elem, index) => renderNavItem(elem, index))}</div>
+        </Switch>
+      </Router>
     </div>
   );
 };
