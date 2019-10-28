@@ -1,0 +1,41 @@
+@import '../../sass/minxin.scss';
+
+.wrapper {
+  position: absolute;
+  height: 100%;
+  background: white;
+  border-right: 3px dashed $yellow;
+  left: 0;
+  top: 0;
+  transform: translateX(-100%);
+  transition: all 0.8s ease;
+
+  .toggle {
+    position: absolute;
+    box-sizing: border-box;
+    right: -50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 3px dashed $yellow;
+    border-left: 0px;
+    width: 50px;
+    height: 110px;
+    border-radius: 0 50px 50px 0;
+    text-align: center;
+    line-height: 100px;
+    color: $darkPurple;
+    cursor: pointer;
+  }
+}
+
+.wrapper.show {
+  .toggle {
+    box-shadow: 8px 0 8px #fff8cd;
+  }
+}
+
+.show {
+  transform: translateX(0);
+  box-shadow: 8px 0 8px #fff8cd;
+}

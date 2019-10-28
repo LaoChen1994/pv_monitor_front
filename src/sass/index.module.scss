@@ -1,0 +1,25 @@
+@import './minxin.scss';
+
+.navLink {
+  display: block;
+  background: white;
+  color: $darkBlue;
+  font-size: 20px;
+  line-height: 28px;
+  padding: 20px;
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background: $blue;
+    color: $darkPurple;
+  }
+}
+
+.active {
+  background: $darkPurple;
+  color: white;
+}

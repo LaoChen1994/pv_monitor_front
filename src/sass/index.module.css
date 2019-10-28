@@ -1,0 +1,23 @@
+.navLink {
+  display: block;
+  background: white;
+  color: #9caef0;
+  font-size: 20px;
+  line-height: 28px;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.navLink:last-child {
+  margin-bottom: 0;
+}
+
+.navLink:hover {
+  background: #9cd8f0;
+  color: #8678ab;
+}
+
+.active {
+  background: #8678ab;
+  color: white;
+}
