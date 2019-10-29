@@ -1,0 +1,45 @@
+@import './minxin.scss';
+
+.APP {
+  height: 100%;
+}
+
+.navLink {
+  display: block;
+  background: white;
+  color: $darkBlue;
+  font-size: 20px;
+  line-height: 28px;
+  padding: 20px;
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background: $blue;
+    color: $darkPurple;
+  }
+}
+
+.active {
+  background: $purple;
+  color: white;
+}
+
+.wrapper {
+  font-size: 16px;
+  min-height: 100%;
+  margin: 0 auto -6rem;
+}
+
+.footer,
+.push {
+  height: 6rem;
+}
+
+.footer {
+  background: $lightYellow;
+  color: $darkPurple;
+}
