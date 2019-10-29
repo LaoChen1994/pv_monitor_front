@@ -1,5 +1,9 @@
 @import './minxin.scss';
 
+.APP {
+  height: 100%;
+}
+
 .navLink {
   display: block;
   background: white;
@@ -20,6 +24,22 @@
 }
 
 .active {
-  background: $darkPurple;
+  background: $purple;
   color: white;
+}
+
+.wrapper {
+  font-size: 16px;
+  min-height: 100%;
+  margin: 0 auto -6rem;
+}
+
+.footer,
+.push {
+  height: 6rem;
+}
+
+.footer {
+  background: $lightYellow;
+  color: $darkPurple;
 }

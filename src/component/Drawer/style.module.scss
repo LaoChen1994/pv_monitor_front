@@ -9,6 +9,7 @@
   top: 0;
   transform: translateX(-100%);
   transition: all 0.8s ease;
+  box-sizing: border-box;
 
   .toggle {
     position: absolute;

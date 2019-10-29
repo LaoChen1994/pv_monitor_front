@@ -3,8 +3,10 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import { routes } from './constant';
 import { INavItem } from './interface';
-import { Drawer } from './component/Drawer';
 import cx from 'classnames';
+
+import { Drawer } from './component/Drawer';
+import { Footer } from './pages/Footer';
 
 import styles from './sass/index.module.scss';
 import './sass/reset.css';
@@ -64,8 +66,15 @@ const App: React.FC = () => {
           </Drawer>
         </nav>
         <Switch>
-          <div>{routes.map((elem, index) => renderNavItem(elem, index))}</div>
+          <div className={cx({ [styles.wrapper]: true })}>
+            {routes.map((elem, index) => renderNavItem(elem, index))}
+            {/* 这个空标签不能删 */}
+            <div className={cx({ [styles.push]: true })}></div>
+          </div>
         </Switch>
+        <div className={cx({ [styles.footer]: true })}>
+          <Footer />
+        </div>
       </Router>
     </div>
   );

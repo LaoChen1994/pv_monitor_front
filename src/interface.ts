@@ -33,3 +33,9 @@ export interface INavItem {
   component: FC;
   name: string;
 }
+
+export interface IContact {
+  iconName: string;
+  name: string;
+  url?: string;
+}
