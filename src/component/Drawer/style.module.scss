@@ -6,10 +6,10 @@
   background: white;
   border-right: 3px dashed $yellow;
   left: 0;
-  top: 0;
   transform: translateX(-100%);
   transition: all 0.8s ease;
   box-sizing: border-box;
+  z-index: 999;
 
   .toggle {
     position: absolute;

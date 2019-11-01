@@ -7,10 +7,13 @@ import { contact } from '../../constant';
 interface Props {}
 
 export const Footer: React.FC<Props> = () => {
-  console.log(contact);
-
   return (
     <div className={cx({ [styles.wrapper]: true })}>
+      <img
+        src={require('../../static/img/PV_IMAGE/FZULogo.png')}
+        alt="福大logo"
+        className={styles.imgBox}
+      />
       <div className={styles.introduction} style={{ pointerEvents: 'none' }}>
         <div>
           本站点为非盈利光伏实时故障检测平台，提供的内容仅适用于

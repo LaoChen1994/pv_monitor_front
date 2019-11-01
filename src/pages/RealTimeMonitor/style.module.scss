@@ -1,0 +1,28 @@
+@import '../../sass/minxin.scss';
+
+.wrapper {
+  padding-bottom: 20px;
+}
+
+.form {
+  text-align: left;
+  padding-bottom: 20px;
+}
+
+.filter {
+  border-bottom: 2px dashed $lightYellow;
+}
+
+.subtitle {
+  @extend ._subtitle;
+}
+
+.content {
+  @extend ._content_text;
+  text-align: left;
+}
+
+.note_item {
+  @extend ._single_text_ellipsis;
+  margin-top: 16px;
+}

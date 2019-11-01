@@ -1,0 +1,39 @@
+._subtitle, .subtitle {
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  color: #380e7f;
+  text-align: left;
+}
+
+._content_text, .content {
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  color: #333;
+}
+
+._single_text_ellipsis, .note_item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wrapper {
+  padding-bottom: 20px;
+}
+
+.form {
+  text-align: left;
+  padding-bottom: 20px;
+}
+
+.filter {
+  border-bottom: 2px dashed #ffd369;
+}
+
+.content {
+  text-align: left;
+}
+
+.note_item {
+  margin-top: 16px;
+}

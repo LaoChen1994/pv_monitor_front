@@ -7,6 +7,8 @@
   height: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
 }
 
 .introduction {
@@ -45,4 +47,10 @@
   font-size: 16px;
   font-weight: bold;
   color: $red;
+  pointer-events: visible;
+}
+
+.imgBox {
+  height: 90%;
+  width: auto;
 }

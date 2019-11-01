@@ -1,22 +1,29 @@
-import React, { useEffect, useState, ReactNode, useCallback } from 'react';
+import React, { useState, ReactNode, useCallback } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { AppContext } from './store/AppContext';
 import { routes } from './constant';
 import { INavItem } from './interface';
 import cx from 'classnames';
+import { Breadcrumb, IBreadcrumbItemProps } from 'zent';
 
 import { Drawer } from './component/Drawer';
-import { Footer } from './pages/Footer';
+import { Footer } from './component/Footer';
 
 import styles from './sass/index.module.scss';
 import './sass/reset.css';
 
 const App: React.FC = () => {
   const [navItemActive, setActive] = useState<number>(0);
+
   const handleNavChange = useCallback(
-    (index: number) => () => setActive(index),
+    (index: number) => () => {
+      setActive(index);
+      addNewBreads({ name: routes[index].name });
+    },
     [setActive]
   );
+  const [breads, setBreads] = useState<IBreadcrumbItemProps[]>([]);
 
   const renderNav = (elem: INavItem, index: number): ReactNode => {
     const { urlMatch, name } = elem;
@@ -38,44 +45,47 @@ const App: React.FC = () => {
     );
   };
 
+  const addNewBreads = (bread: IBreadcrumbItemProps) => {
+    setBreads([{ name: '官网首页', href: '//www.fzu.edu.cn' }, bread]);
+  };
+
   const renderNavItem = (elem: INavItem, index: number): ReactNode => {
     const { urlMatch, isExact, component: Component } = elem;
     return (
       <>
         {isExact ? (
-          <Route path={urlMatch}>
-            <Component></Component>
-          </Route>
+          <Route path={urlMatch} component={Component}></Route>
         ) : (
-          <Route path={urlMatch} exact>
-            <Component></Component>
-          </Route>
+          <Route path={urlMatch} exact component={Component}></Route>
         )}
       </>
     );
   };
 
-  // const render
-
   return (
     <div className="App">
-      <Router>
-        <nav>
-          <Drawer width={'200px'} padding={'30px 0'}>
-            <div>{routes.map((elem, index) => renderNav(elem, index))}</div>
-          </Drawer>
-        </nav>
-        <Switch>
-          <div className={cx({ [styles.wrapper]: true })}>
-            {routes.map((elem, index) => renderNavItem(elem, index))}
-            {/* 这个空标签不能删 */}
-            <div className={cx({ [styles.push]: true })}></div>
+      <AppContext.Provider value={{ handleNavChange, addNewBreads }}>
+        <Router>
+          <nav>
+            <Drawer width={'200px'} padding={'30px 0'}>
+              <div>{routes.map((elem, index) => renderNav(elem, index))}</div>
+            </Drawer>
+          </nav>
+          <div className={cx({ [styles.header]: true })}>
+            <Breadcrumb breads={breads}></Breadcrumb>
           </div>
-        </Switch>
-        <div className={cx({ [styles.footer]: true })}>
-          <Footer />
-        </div>
-      </Router>
+          <Switch>
+            <div className={cx({ [styles.wrapper]: true })}>
+              {routes.map((elem, index) => renderNavItem(elem, index))}
+              {/* 这个空标签不能删 */}
+              <div className={cx({ [styles.push]: true })}></div>
+            </div>
+          </Switch>
+          <div className={cx({ [styles.footer]: true })}>
+            <Footer />
+          </div>
+        </Router>
+      </AppContext.Provider>
     </div>
   );
 };

@@ -4,6 +4,13 @@
   height: 100%;
 }
 
+.header {
+  height: 3rem;
+  border-bottom: 2px dashed $lightYellow;
+  text-align: left;
+  padding-left: 20px;
+}
+
 .navLink {
   display: block;
   background: white;
@@ -30,8 +37,12 @@
 
 .wrapper {
   font-size: 16px;
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 20px;
   min-height: 100%;
   margin: 0 auto -6rem;
+  box-sizing: border-box;
 }
 
 .footer,

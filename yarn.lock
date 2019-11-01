@@ -1310,6 +1310,11 @@
   resolved "https://registry.npm.taobao.org/@types/json-schema/download/@types/json-schema-7.0.3.tgz?cache=0&sync_timestamp=1567561051189&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fjson-schema%2Fdownload%2F%40types%2Fjson-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
   integrity sha1-vf1p1h5GTcyBslFZwnDXWnPBpjY=
 
+"@types/lodash@^4.14.144":
+  version "4.14.144"
+  resolved "https://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.144.tgz#12e57fc99064bce45e5ab3c8bc4783feb75eab8e"
+  integrity sha1-EuV/yZBkvOReWrPIvEeD/rdeq44=
+
 "@types/node@12.11.1":
   version "12.11.1"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.11.1.tgz?cache=0&sync_timestamp=1571183972817&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.11.1.tgz#1fd7b821f798b7fa29f667a1be8f3442bb8922a3"
@@ -3637,6 +3642,14 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
+
+echarts-for-react@^2.0.15-beta.1:
+  version "2.0.15-beta.1"
+  resolved "https://registry.npm.taobao.org/echarts-for-react/download/echarts-for-react-2.0.15-beta.1.tgz#1afa21ee0f08f9023eff0b5ab3351f2fe0f708b6"
+  integrity sha1-Gvoh7g8I+QI+/wtaszUfL+D3CLY=
+  dependencies:
+    fast-deep-equal "^2.0.1"
+    size-sensor "^0.2.0"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -8530,6 +8543,16 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-amap-plugin-geolocation@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npm.taobao.org/react-amap-plugin-geolocation/download/react-amap-plugin-geolocation-0.0.2.tgz#3e30530ddf71ce8e852d34505d73cc4f4f000856"
+  integrity sha1-PjBTDd9xzo6FLTRQXXPMT08ACFY=
+
+react-amap@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.npm.taobao.org/react-amap/download/react-amap-1.2.8.tgz#cb5a6441c5e83acb0d7b2e8a1b20dc539b759d9b"
+  integrity sha1-y1pkQcXoOssNey6KGyDcU5t1nZs=
+
 react-app-polyfill@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npm.taobao.org/react-app-polyfill/download/react-app-polyfill-1.0.4.tgz#4dd2636846b585c2d842b1e44e1bc29044345874"
@@ -9344,6 +9367,11 @@ sisteransi@^1.0.3:
   version "1.0.3"
   resolved "https://registry.npm.taobao.org/sisteransi/download/sisteransi-1.0.3.tgz#98168d62b79e3a5e758e27ae63c4a053d748f4eb"
   integrity sha1-mBaNYreeOl51jieuY8SgU9dI9Os=
+
+size-sensor@^0.2.0:
+  version "0.2.5"
+  resolved "https://registry.npm.taobao.org/size-sensor/download/size-sensor-0.2.5.tgz#e8ffb7cc5258893472bfda4f5734d66583247757"
+  integrity sha1-6P+3zFJYiTRyv9pPVzTWZYMkd1c=
 
 slash@^1.0.0:
   version "1.0.0"
@@ -10945,7 +10973,7 @@ yarn@^1.19.1:
   resolved "https://registry.npm.taobao.org/yarn/download/yarn-1.19.1.tgz#14b92410dd1ba5bab87a12b4a3d807f4569bea97"
   integrity sha1-FLkkEN0bpbq4ehK0o9gH9Fab6pc=
 
-zent@^7.0.0:
+zent@7.0.0-next.39:
   version "7.0.0-next.39"
   resolved "https://registry.npm.taobao.org/zent/download/zent-7.0.0-next.39.tgz#ccaa23760a619736a42ce2eaaaf2b0b75a2db46f"
   integrity sha1-zKojdgphlzakLOLqqvKwt1ottG8=
