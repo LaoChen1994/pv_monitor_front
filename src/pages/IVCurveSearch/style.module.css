@@ -1,17 +1,7 @@
-$yellow: #efdd9c;
-$lightYellow: #ffd369;
-$blue: #9cd8f0;
-$darkBlue: #9caef0;
-$purple: #851de0;
-$pink: #df42d1;
-$darkPurple: #380e7f;
-$red: #f44;
-$black: #333;
-
 ._subtitle {
   font-size: 1.25rem;
   line-height: 1.5rem;
-  color: $darkPurple;
+  color: #380e7f;
   text-align: left;
 }
 
@@ -25,4 +15,23 @@ $black: #333;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.left {
+  flex: 0 400px;
+  padding: 10px;
+  border-right: 2px dashed #ffd369;
+}
+
+.right {
+  flex: 1;
+}
+
+.mapWrapper {
+  width: 100%;
+  height: 300px;
 }

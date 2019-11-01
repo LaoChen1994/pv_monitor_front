@@ -1,5 +1,6 @@
 import Axios from 'axios';
-import { TGetPlotCurve, GetMoDataNumber } from './interface';
+import { TGetPlotCurve, GetMoDataNumber, TGetTableInfo } from './interface';
+import { filterParamInObj } from './utils';
 
 const HOST = 'http://127.0.0.1:8000/iv';
 
@@ -20,3 +21,15 @@ export const getModuleDataNumber: GetMoDataNumber = async (module: string) =>
       module
     }
   });
+
+export const getSearchTableData: TGetTableInfo = async (
+  start,
+  end,
+  low,
+  high,
+  mode
+) => {
+  const params = filterParamInObj({ start, end, low, high, mode });
+
+  return Axios.get(`${HOST}/info_search`, { params });
+};
