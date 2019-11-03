@@ -31,7 +31,7 @@ const App: React.FC = () => {
     return (
       <>
         <Link
-          to={urlMatch}
+          to={urlMatch.replace(/:(.*)/gi, '1')}
           key={index}
           className={cx({
             [styles.navLink]: true,

@@ -1,4 +1,4 @@
-@import '../../sass/minxin.scss';
+@import "../../sass/minxin.scss";
 
 .wrapper {
   display: flex;
@@ -14,7 +14,45 @@
   flex: 1;
 }
 
+.top {
+  display: flex;
+  justify-content: space-between;
+}
+
 .mapWrapper {
   width: 100%;
   height: 300px;
+  margin-bottom: 60px;
+}
+
+.title {
+  @extend ._subtitle;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  @extend ._thridTitle;
+  margin: 20px 0;
+}
+
+.content {
+  @extend ._content_text;
+  color: $red;
+  font-weight: bold;
+}
+
+.topChart {
+  width: 50%;
+  height: 300px;
+  margin: 20px auto 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.chartTitle {
+  @extend ._subtitle;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: left;
+  padding-left: 60px;
 }

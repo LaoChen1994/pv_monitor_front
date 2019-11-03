@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@antv/g2": "^3.5.9",
     "@babel/core": "7.6.0",
     "@svgr/webpack": "4.3.2",
     "@types/classnames": "^2.2.9",

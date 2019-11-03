@@ -1,5 +1,7 @@
 import { FC } from 'react';
 import { IBreadcrumbItemProps } from 'zent';
+import { FullLngLatPos } from 'react-amap';
+import { string } from 'prop-types';
 
 interface ICount {
   count: number;
@@ -88,4 +90,35 @@ export interface IRadioType {
 export interface IAppContext {
   handleNavChange?: (index: number) => () => void;
   addNewBreads?: (bread: IBreadcrumbItemProps) => void;
+}
+
+export interface IMyMapProps {
+  center?: FullLngLatPos;
+  setCenter?: React.Dispatch<React.SetStateAction<FullLngLatPos>>;
+}
+
+export interface IMyItemsProps {
+  label: string;
+  content?: string;
+  hasColon?: boolean;
+  bodyRender?: () => React.ReactElement;
+}
+
+export type ITransKeys<T> = {
+  readonly [P in keyof T]?: string;
+};
+
+export type TAEC<T> = keyof T;
+
+export interface IDataWithOrg<T> {
+  value: T;
+  org: 'W' | 'A' | 'V';
+}
+
+export interface IKeyValueOnCurves {
+  Voc: IDataWithOrg<number>;
+  Isc: IDataWithOrg<number>;
+  Pmpp: IDataWithOrg<number>;
+  Vmpp: IDataWithOrg<number>;
+  Impp: IDataWithOrg<number>;
 }

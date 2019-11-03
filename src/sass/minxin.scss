@@ -1,6 +1,6 @@
 $yellow: #efdd9c;
 $lightYellow: #ffd369;
-$blue: #9cd8f0;
+$blue: #4cb4e7;
 $darkBlue: #9caef0;
 $purple: #851de0;
 $pink: #df42d1;
@@ -13,6 +13,17 @@ $black: #333;
   line-height: 1.5rem;
   color: $darkPurple;
   text-align: left;
+  font-weight: bold;
+}
+
+._thridTitle {
+  border-left: 0.25rem solid $pink;
+  border-radius: 0.068rem;
+  font-size: 1.125rem;
+  line-height: 1.3rem;
+  color: $blue;
+  text-align: left;
+  padding-left: 10px;
 }
 
 ._content_text {
