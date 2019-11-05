@@ -64,7 +64,7 @@ export class MyChart extends React.Component<IAppProps, IState> {
         alias: xLabelName
       },
       [yLabelValue]: {
-        alias: xLabelName
+        alias: yLabelName
       }
     });
 
@@ -74,12 +74,14 @@ export class MyChart extends React.Component<IAppProps, IState> {
     _chart.axis(xLabelValue, {
       title: {
         textStyle: xLabelTextStyle,
-        position: 'center'
+        position: 'center',
+        offset: 35
       }
     });
     _chart.axis(yLabelValue, {
       title: {
-        textStyle: xLabelTextStyle,
+        offset: 35,
+        textStyle: yLabelTextStyle,
         position: 'center'
       }
     });

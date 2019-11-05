@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { IBreadcrumbItemProps } from 'zent';
 import { FullLngLatPos } from 'react-amap';
-import { string } from 'prop-types';
 
 interface ICount {
   count: number;
@@ -30,6 +29,10 @@ export interface ITableSearchInfo {
   isNew: boolean;
 }
 
+export interface IToken {
+  token: string;
+}
+
 export interface ITableSearchWithNumber {
   data: ITableSearchInfo[];
   totalNumber: number;
@@ -43,11 +46,27 @@ export type GetMoDataNumber = (
   moduleType: string
 ) => Promise<ICommonApiInterface<ICount>>;
 
+export type TGetToken = () => Promise<ICommonApiInterface<IToken>>;
+
 export interface ISearchGridProp {
   searchDataset: ITableSearchInfo[];
   handlePageChange: (current: number) => void;
   pageInfo: IPageInfo;
   pageLink?: (current: number) => void;
+}
+
+export type TFaultTypes = 'normal' | 'partial shadow_1';
+
+export interface TDetailFault {
+  normal: string;
+  'partial shadow_1': string;
+  'partial shadow_2': string;
+  'partial shadow_3': string;
+  'short circuit_1': '短路故障 1';
+  'short circuit_2': '短路故障 2';
+  degradation_1: '老化故障 1';
+  degradation_2: '老化故障 2';
+  open_circuit: '开路故障';
 }
 
 export type TGetTableInfo = (
@@ -122,3 +141,38 @@ export interface IKeyValueOnCurves {
   Vmpp: IDataWithOrg<number>;
   Impp: IDataWithOrg<number>;
 }
+
+export interface IMyCurSelFormParam {
+  curveId: number;
+  lowTemp: number;
+  highTemp: number;
+  lowIrr: number;
+  highIrr: number;
+  faultType: keyof TDetailFault;
+  dataType: number;
+}
+
+export interface ICommonFormProps {
+  name: string;
+  label?: string;
+  _onChange?: (name: string, value: any) => void;
+  hasColon?: boolean;
+  layout?: 'horizontal' | 'vertical';
+  align?: 'center' | 'start' | 'end';
+}
+
+export interface ICurveQuantWithFault {
+  total: number;
+  faultNumber: {
+    trueData: boolean;
+    fault_type: keyof TDetailFault;
+    count: number;
+    faultId: number;
+  }[];
+  expDataCount: number;
+  simDataCount: number;
+}
+
+export type TGetCurvesQuantity = () => Promise<
+  ICommonApiInterface<ICurveQuantWithFault>
+>;

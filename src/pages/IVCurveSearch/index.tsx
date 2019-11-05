@@ -7,10 +7,14 @@ import { MyMap } from '../../component/MyMap';
 import { getPlotCurve } from '../../api';
 import { MyItems } from '../../component/MyItems';
 import { MyChart } from '../../component/MyChart';
+import { CurSelForm } from '../../component/CurSelForm';
 
 import { routes, nameTrans, faultTypes } from '../../constant';
 import { IPlotCurve, TAEC, IKeyValueOnCurves } from '../../interface';
 import styles from './style.module.scss';
+import cx from 'classnames';
+
+import { getCurveQuantity } from '../../api';
 
 interface Props {}
 
@@ -22,7 +26,7 @@ interface IParams {
 export const IVCurveSearch: React.FC<
   Props & RouteComponentProps<IParams>
 > = props => {
-  const { addNewBreads } = useAppContext();
+  const { handleNavChange } = useAppContext();
   const [center, setCenter] = useState<FullLngLatPos>({
     longitude: 119.200382,
     latitude: 26.063076
@@ -33,8 +37,9 @@ export const IVCurveSearch: React.FC<
     irradiance: 0,
     plot_data: [],
     work_status: '',
-    pk: -1
+    pk: 1
   });
+  const [cQuantity, setQuantity] = useState<number>(0);
 
   const getOpc: () => Array<[TAEC<IPlotCurve>, string]> = () => {
     const { plot_data, ...rest } = curveData;
@@ -70,7 +75,15 @@ export const IVCurveSearch: React.FC<
   }, [curveData]);
 
   useEffect(() => {
-    addNewBreads && addNewBreads({ name: routes[1].name });
+    handleNavChange && handleNavChange(1)();
+
+    const getNum = async () => {
+      const { data } = await getCurveQuantity();
+      const { total } = data;
+      setQuantity(total);
+    };
+
+    getNum();
   }, []);
 
   useEffect(() => {
@@ -84,7 +97,22 @@ export const IVCurveSearch: React.FC<
       setCurveData(data);
     };
     getData(Number.isNaN(+id) ? 1 : +id);
+  }, []);
+
+  useEffect(() => {
+    const getData = async (index: number) => {
+      const res = await getPlotCurve(index);
+      const { data } = res;
+      // @ts-ignore
+      data.work_status = faultTypes[data.work_status];
+      setCurveData(data);
+    };
+    getData(curveData.pk);
   }, [curveData.pk]);
+
+  const updateCurveById = (curveId: number) => {
+    setCurveData({ ...curveData, pk: curveId });
+  };
 
   const renderKeyValueTable = (kp: keyof IKeyValueOnCurves) => {
     const keyTable = getKeyValue[kp];
@@ -119,13 +147,6 @@ export const IVCurveSearch: React.FC<
     }));
   }, [curveData]);
 
-  const mData = [
-    { vol: 0.0101, curr: 1.0296 },
-    { vol: 1.0101, curr: 1.0261 },
-    { vol: 2.0101, curr: 1.0226 },
-    { vol: 3.0101, curr: 1.0191 }
-  ];
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.left}>
@@ -157,6 +178,9 @@ export const IVCurveSearch: React.FC<
         </div>
       </div>
       <div className={styles.right}>
+        <div className={cx({ [styles.subtitle]: true, [styles.ml30]: true })}>
+          特性曲线
+        </div>
         <div className={styles.top}>
           <div className={styles.topChart}>
             <div className={styles.chartTitle}>I-V特性曲线</div>
@@ -168,7 +192,17 @@ export const IVCurveSearch: React.FC<
               xLabelValue="vol"
               yLabelValue="curr"
               chartType="line"
-              padding={{ top: 20, left: 60, bottom: 20, right: 40 }}
+              padding={{ top: 20, left: 60, bottom: 60, right: 40 }}
+              xLabelName="电压 (V)"
+              yLabelName="电流 (A)"
+              xLabelTextStyle={{
+                fill: '#ff4444',
+                fontWeight: 'bolder'
+              }}
+              yLabelTextStyle={{
+                fill: '#ff4444',
+                fontWeight: 'bolder'
+              }}
             ></MyChart>
           </div>
           <div className={styles.topChart}>
@@ -181,8 +215,28 @@ export const IVCurveSearch: React.FC<
               data={getPVPlotData}
               xLabelValue="vol"
               yLabelValue="power"
-              padding={{ top: 20, left: 60, bottom: 20, right: 40 }}
+              padding={{ top: 20, left: 80, bottom: 60, right: 40 }}
+              xLabelName="电压 (V)"
+              yLabelName="功率 (W)"
+              xLabelTextStyle={{
+                fill: '#ff4444',
+                fontWeight: 'bolder'
+              }}
+              yLabelTextStyle={{
+                fill: '#ff4444',
+                fontWeight: 'bolder'
+              }}
             ></MyChart>
+          </div>
+        </div>
+        <div className={styles.bottom}>
+          <div className={styles.bottomLeft}>
+            <div className={cx({ [styles.subtitle]: true })}>曲线查询列表</div>
+            <CurSelForm
+              curveId={curveData.pk}
+              maxQuantity={cQuantity}
+              updateCurveById={updateCurveById}
+            ></CurSelForm>
           </div>
         </div>
       </div>

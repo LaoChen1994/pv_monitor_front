@@ -8,7 +8,9 @@ import {
   IRadioType,
   ITransKeys,
   IPlotCurve,
-  IKeyValueOnCurves
+  TDetailFault,
+  IKeyValueOnCurves,
+  IMyCurSelFormParam
 } from './interface';
 
 export const routes: INavItem[] = [
@@ -83,7 +85,7 @@ export const nameTrans: ITransKeys<IPlotCurve & IKeyValueOnCurves> = {
   Voc: '开路电压'
 };
 
-export const faultTypes = {
+export const faultTypes: TDetailFault = {
   normal: '正常',
   'partial shadow_1': '阴影故障 1',
   'partial shadow_2': '阴影故障 2',
@@ -93,6 +95,16 @@ export const faultTypes = {
   degradation_1: '老化故障 1',
   degradation_2: '老化故障 2',
   open_circuit: '开路故障'
+};
+
+export const initCurSelValue: IMyCurSelFormParam = {
+  curveId: 1,
+  lowTemp: 0,
+  highTemp: 40,
+  lowIrr: 0,
+  highIrr: 1000,
+  faultType: 'normal',
+  dataType: 0
 };
 
 export const mapKey = '4e55cfed61e358a2e5de01661fb97dbc';
