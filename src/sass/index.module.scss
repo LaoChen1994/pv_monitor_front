@@ -1,4 +1,4 @@
-@import './minxin.scss';
+@import "./minxin.scss";
 
 .APP {
   height: 100%;
@@ -53,4 +53,14 @@
 .footer {
   background: $lightYellow;
   color: $darkPurple;
+  height: 6rem;
 }
+
+.content {
+  @extend ._content_text;
+}
+
+// .important {
+//   color: $red;
+//   font-weight: bold;
+// }

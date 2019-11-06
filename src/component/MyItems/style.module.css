@@ -1,4 +1,4 @@
-._subtitle {
+._subtitle, .title {
   font-size: 1.25rem;
   line-height: 1.5rem;
   color: #380e7f;
@@ -16,7 +16,7 @@
   padding-left: 10px;
 }
 
-._content_text {
+._content_text, .content {
   font-size: 0.75rem;
   line-height: 1.25rem;
   color: #333;
@@ -26,4 +26,26 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.wrapper {
+  height: 1.5rem;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+}
+
+.title {
+  font-size: 0.875rem;
+}
+
+.title.addColon::after {
+  content: ":";
+}
+
+.content {
+  color: #4cb4e7;
+  font-weight: bold;
 }

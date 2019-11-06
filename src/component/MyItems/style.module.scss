@@ -1,0 +1,29 @@
+@import '../../sass/minxin.scss';
+
+.wrapper {
+  height: 1.5rem;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+}
+
+.title {
+  @extend ._subtitle;
+  font-size: 0.875rem;
+
+  &.addColon {
+
+    &::after {
+      content: ":";
+    }
+
+  }
+}
+
+.content {
+  @extend ._content_text;
+  color: $blue;
+  font-weight: bold;
+}

@@ -27,3 +27,21 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.hasColon::after {
+  content: ":";
+}
+
+.layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.label {
+  margin-right: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #9caef0;
+  font-weight: bold;
+}

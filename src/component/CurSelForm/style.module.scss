@@ -1,0 +1,19 @@
+.wrapper {
+  width: 100%;
+}
+
+.inlineBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  display: flex;
+  justify-content: start;
+}
