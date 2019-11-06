@@ -18,7 +18,12 @@ import {
 import { faultTypes } from '../../constant';
 
 export const CurSelForm: React.FC<ICurSelForm> = props => {
-  const { curveId = 1, maxQuantity, updateCurveById } = props;
+  const {
+    curveId = 1,
+    maxQuantity,
+    updateCurveById,
+    updateCurveByAdvanced
+  } = props;
 
   const [formValue, _setFormValue] = useState<IMyCurSelFormParam>(
     initCurSelValue
@@ -35,7 +40,9 @@ export const CurSelForm: React.FC<ICurSelForm> = props => {
   };
 
   const getFormValue = (itemName?: keyof IMyCurSelFormParam) =>
-    itemName ? get(formValue, itemName, initCurSelValue[itemName]) : formValue;
+    itemName
+      ? get(formValue, itemName, initCurSelValue[itemName])
+      : (formValue as IMyCurSelFormParam);
 
   const validator = (name: keyof IMyCurSelFormParam) => (
     value: any
@@ -45,6 +52,10 @@ export const CurSelForm: React.FC<ICurSelForm> = props => {
     } else {
       return formValue.lowTemp <= formValue.highTemp ? true : false;
     }
+  };
+
+  const updateCurByDetail = () => {
+    updateCurveByAdvanced && updateCurveByAdvanced(formValue);
   };
 
   const selectData = useMemo(() => {
@@ -171,6 +182,21 @@ export const CurSelForm: React.FC<ICurSelForm> = props => {
             ></MySelect>
           </Col>
         </Row>
+        <Row>
+          <Col span={24}>
+            <MySelect
+              name="dataType"
+              data={[
+                { value: 0, text: '模拟数据' },
+                { value: 1, text: '实测数据' }
+              ]}
+              value={formValue.dataType}
+              _onChange={setFormValue}
+              label="数据类型"
+              width={150}
+            ></MySelect>
+          </Col>
+        </Row>
         <Row justify="start">
           <Col span={24} offset={0}>
             <div className={styles.left}>
@@ -189,7 +215,12 @@ export const CurSelForm: React.FC<ICurSelForm> = props => {
               >
                 后一条曲线
               </Button>
-              <Button type="success" outline icon="search">
+              <Button
+                type="success"
+                outline
+                icon="search"
+                onClick={updateCurByDetail}
+              >
                 搜索
               </Button>
             </div>

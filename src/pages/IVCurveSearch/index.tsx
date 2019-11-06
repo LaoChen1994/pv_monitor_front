@@ -4,17 +4,25 @@ import { FullLngLatPos } from 'react-amap';
 
 import { useAppContext } from '../../store/AppContext';
 import { MyMap } from '../../component/MyMap';
-import { getPlotCurve } from '../../api';
+import { getPlotCurve, getAdvanceRes } from '../../api';
 import { MyItems } from '../../component/MyItems';
 import { MyChart } from '../../component/MyChart';
 import { CurSelForm } from '../../component/CurSelForm';
+import { MyInput } from '../../component/FormComponent/MyInput';
 
-import { routes, nameTrans, faultTypes } from '../../constant';
-import { IPlotCurve, TAEC, IKeyValueOnCurves } from '../../interface';
+import { nameTrans, faultTypes } from '../../constant';
+import {
+  IPlotCurve,
+  TAEC,
+  IKeyValueOnCurves,
+  IMyCurSelFormParam
+} from '../../interface';
 import styles from './style.module.scss';
 import cx from 'classnames';
 
-import { getCurveQuantity } from '../../api';
+import { getCurveQuantity, getDownsampleCurve } from '../../api';
+
+import { Button, Notify } from 'zent';
 
 interface Props {}
 
@@ -40,10 +48,32 @@ export const IVCurveSearch: React.FC<
     pk: 1
   });
   const [cQuantity, setQuantity] = useState<number>(0);
+  const [numOfSamp, setNumOfSamp] = useState<number>(0);
 
   const getOpc: () => Array<[TAEC<IPlotCurve>, string]> = () => {
     const { plot_data, ...rest } = curveData;
     return Object.entries(rest) as Array<[TAEC<IPlotCurve>, string]>;
+  };
+
+  const updateCurveByAdvanced = async ({
+    lowIrr,
+    lowTemp,
+    highTemp,
+    highIrr,
+    dataType,
+    faultType
+  }: IMyCurSelFormParam) => {
+    const { data } = await getAdvanceRes(
+      lowTemp,
+      highTemp,
+      lowIrr,
+      highIrr,
+      faultType,
+      dataType
+    );
+
+    const { query_list } = data;
+    setCurveData({ ...curveData, pk: query_list[0] });
   };
 
   const getKeyValue: IKeyValueOnCurves = useMemo(() => {
@@ -129,6 +159,10 @@ export const IVCurveSearch: React.FC<
     );
   };
 
+  const _setSampleNum = (name: string, value: string) => {
+    setNumOfSamp(+value);
+  };
+
   const getIVPlotData = useMemo(() => {
     const { plot_data } = curveData;
 
@@ -146,6 +180,89 @@ export const IVCurveSearch: React.FC<
       power: +(elem[1] * elem[0]).toFixed(4)
     }));
   }, [curveData]);
+
+  const getResampleData = async () => {
+    const { pk } = curveData;
+
+    if (numOfSamp < 20) {
+      Notify.error('采样点个数应大于20');
+      return;
+    }
+    const { data } = await getDownsampleCurve(pk, numOfSamp);
+    const { plot_data } = data;
+
+    setCurveData({ ...curveData, plot_data });
+  };
+
+  const rendeSample = () => (
+    <>
+      <div className={cx({ [styles.subtitle]: true })}>曲线下采样</div>
+      <MyInput
+        type="number"
+        value={numOfSamp.toString()}
+        label="采样个数"
+        hasColon={true}
+        name="numOfSample"
+        size="normal"
+        width={160}
+        _onChange={_setSampleNum}
+      ></MyInput>
+      <div className={styles.control}>
+        <Button type="primary" outline onClick={getResampleData}>
+          下采样
+        </Button>
+        <Button type="primary" onClick={() => setNumOfSamp(0)}>
+          清空
+        </Button>
+      </div>
+    </>
+  );
+
+  const renderNotes = () => {
+    return (
+      <>
+        <div className={styles.subtitle}>使用说明</div>
+        <div className={styles.notesContent}>
+          <div>
+            1. 曲线号值最大不能超过 &nbsp;
+            <span className={styles.important}>{cQuantity}</span>
+          </div>
+        </div>
+        <div className={styles.notesContent}>
+          <div>
+            2. 温度范围应在 &nbsp;
+            <span className={styles.important}>
+              0 <sup>o</sup>C{' '}
+            </span>{' '}
+            ~{' '}
+            <span className={styles.important}>
+              40 <sup>o</sup>C{' '}
+            </span>
+            之间
+          </div>
+        </div>
+        <div className={styles.notesContent}>
+          <div>
+            3. 幅照度范围应在 &nbsp;
+            <span className={styles.important}>
+              0 W/m<sup>2</sup>
+            </span>
+            ~
+            <span className={styles.important}>
+              1000 W/m<sup>2</sup>
+            </span>
+            之间
+          </div>
+        </div>
+        <div className={styles.notesContent}>
+          <div>
+            4. 下采样点个数应大于 &nbsp;
+            <span className={styles.important}>20</span>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -232,11 +349,18 @@ export const IVCurveSearch: React.FC<
         <div className={styles.bottom}>
           <div className={styles.bottomLeft}>
             <div className={cx({ [styles.subtitle]: true })}>曲线查询列表</div>
-            <CurSelForm
-              curveId={curveData.pk}
-              maxQuantity={cQuantity}
-              updateCurveById={updateCurveById}
-            ></CurSelForm>
+            <div className={cx({ [styles.formWrapper]: true })}>
+              <CurSelForm
+                curveId={curveData.pk}
+                maxQuantity={cQuantity}
+                updateCurveById={updateCurveById}
+                updateCurveByAdvanced={updateCurveByAdvanced}
+              ></CurSelForm>
+            </div>
+          </div>
+          <div className={styles.bottomRight}>
+            <div className={styles.downsample}>{rendeSample()}</div>
+            <div className={styles.notes}>{renderNotes()}</div>
           </div>
         </div>
       </div>

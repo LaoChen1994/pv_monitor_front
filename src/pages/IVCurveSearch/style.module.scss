@@ -63,10 +63,49 @@
 }
 
 .bottom {
-  padding: 20px 30px 20px;
+  padding: 20px 20px 20px;
   display: flex;
 }
 
 .bottomLeft {
-  flex: 0 60%;
+  flex: 0 50%;
+}
+
+.bottomRight {
+  flex: 1;
+
+  @media screen and (max-width: 1900px) {
+    margin-left: 30px;
+  }
+
+  @media screen and (max-width: 1300px) {
+    margin-left: 30px;
+  }
+
+  @media screen and (max-width: 1000) {
+    margin-left: 20px;
+  }
+}
+
+.formWrapper {
+  width: 400px;
+  margin: auto;
+  padding-top: 20px;
+}
+
+.control {
+  text-align: left;
+  margin-top: 10px;
+}
+
+.notesContent {
+  @extend ._content_text;
+  text-align: left;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.important {
+  color: $red;
+  font-weight: bold;
 }

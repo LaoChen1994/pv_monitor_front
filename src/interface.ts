@@ -149,7 +149,7 @@ export interface IMyCurSelFormParam {
   lowIrr: number;
   highIrr: number;
   faultType: keyof TDetailFault;
-  dataType: number;
+  dataType: 0 | 1;
 }
 
 export interface ICommonFormProps {
@@ -176,3 +176,17 @@ export interface ICurveQuantWithFault {
 export type TGetCurvesQuantity = () => Promise<
   ICommonApiInterface<ICurveQuantWithFault>
 >;
+
+export type TGetSampleCurve = (
+  pk: number,
+  num: number
+) => Promise<ICommonApiInterface<{ plot_data: [number, number][] }>>;
+
+export type TGetCurvesAdvanced = (
+  temp_low: number,
+  temp_upper: number,
+  irr_low: number,
+  irr_upper: number,
+  fault_type: keyof TDetailFault,
+  data_type: 0 | 1
+) => Promise<ICommonApiInterface<{ query_list: number[] }>>;

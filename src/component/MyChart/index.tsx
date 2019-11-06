@@ -27,14 +27,22 @@ interface IAppProps {
 
 interface IState {
   chart: any;
+  isForceUpdate: boolean;
 }
 
-export class MyChart extends React.Component<IAppProps, IState> {
+export class MyChart extends React.PureComponent<IAppProps, IState> {
   constructor(props: Readonly<IAppProps>) {
     super(props);
     this.state = {
-      chart: null
+      chart: null,
+      isForceUpdate: false
     };
+  }
+
+  isForceUpdate() {
+    const { isForceUpdate } = this.state;
+    isForceUpdate && this.forceUpdate();
+    this.setState({ isForceUpdate: !isForceUpdate });
   }
 
   componentDidMount() {
@@ -78,11 +86,28 @@ export class MyChart extends React.Component<IAppProps, IState> {
         offset: 35
       }
     });
+    _chart.point().position(`${xLabelValue}*${yLabelValue}`);
     _chart.axis(yLabelValue, {
       title: {
         offset: 35,
         textStyle: yLabelTextStyle,
         position: 'center'
+      }
+    });
+    _chart.tooltip({
+      useHtml: true,
+      htmlContent: function(title, items) {
+        const { point } = items[0];
+        const { _origin } = point;
+        return `
+        <div class="g2-tooltip">
+        <div class="g2-tooltip-title" style="margin-bottom: 4px;text-align:left">数据详情:</div>
+          <ul class="g2-tooltip-list" style="text-align:left">
+            <li>${xLabelName}: ${_origin[xLabelValue]}</li>
+            <li>${yLabelName}: ${_origin[yLabelValue]}</li>
+          </ul>
+        </div>
+        `;
       }
     });
     _chart.render();
@@ -96,6 +121,7 @@ export class MyChart extends React.Component<IAppProps, IState> {
     const { chart } = this.state;
     //　@ts-ignore
     chart !== null && chart.changeData(data);
+    this.isForceUpdate();
   }
 
   public render() {
