@@ -1,13 +1,6 @@
 import React from 'react';
-import G2, { Styles } from '@antv/g2';
-
-interface ITextStyle {
-  textAlign?: 'center' | 'start' | 'end';
-  fill?: string;
-  fontSize?: string;
-  fontWeight: 'bold' | 'normal' | 'bolder';
-  rotate: number;
-}
+import G2, { Styles, Scale } from '@antv/g2';
+import { filterParamInObj } from '../../utils';
 
 interface IAppProps {
   data: any[];
@@ -17,32 +10,35 @@ interface IAppProps {
   yLabelValue: string;
   xLabelName?: string;
   yLabelName?: string;
-  chartType?: 'line' | 'interval' | 'point';
+  chartType?: 'line' | 'interval' | 'point' | 'polygon';
   colorCurves?: string;
   containerId: string;
   padding?: { top: number; right: number; bottom: number; left: number };
   xLabelTextStyle?: Styles.text;
   yLabelTextStyle?: Styles.text;
+  xLineStyle?: Styles.line;
+  yLineStyle?: Styles.line;
+  multiItem?: string;
+  xRange?: [number, number];
+  yRange?: [number, number];
+  xType?: 'identity' | 'linear' | 'cat' | 'time' | 'timeCat' | 'log' | 'pow';
+  xAxisValues?: string[];
+  yType?: 'identity' | 'linear' | 'cat' | 'time' | 'timeCat' | 'log' | 'pow';
+  yAxisValues?: string[];
+  labelValue?: string;
+  scaleColor?: string[];
 }
 
 interface IState {
   chart: any;
-  isForceUpdate: boolean;
 }
 
 export class MyChart extends React.PureComponent<IAppProps, IState> {
   constructor(props: Readonly<IAppProps>) {
     super(props);
     this.state = {
-      chart: null,
-      isForceUpdate: false
+      chart: null
     };
-  }
-
-  isForceUpdate() {
-    const { isForceUpdate } = this.state;
-    isForceUpdate && this.forceUpdate();
-    this.setState({ isForceUpdate: !isForceUpdate });
   }
 
   componentDidMount() {
@@ -52,48 +48,61 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
       chartType = 'line',
       xLabelValue,
       yLabelValue,
-      colorCurves,
       padding,
       xLabelTextStyle,
       yLabelTextStyle,
       xLabelName,
-      yLabelName
+      yLabelName,
+      containerHeight = 300,
+      xLineStyle,
+      yLineStyle,
+      multiItem,
+      xType,
+      yType,
+      xAxisValues,
+      yAxisValues,
+      labelValue,
+      scaleColor = ['#73d2f3', '#10316b']
     } = this.props;
 
     const _chart = new G2.Chart({
       container: containerId,
       forceFit: true,
-      height: 300,
+      height: +containerHeight || 300,
       padding
     });
 
+    const xScaleConfig = filterParamInObj({ type: xType, values: xAxisValues });
+    const yScaleConfig = filterParamInObj({ type: yType, values: yAxisValues });
+
     _chart.source(data, {
       [xLabelValue]: {
-        alias: xLabelName
+        alias: xLabelName,
+        ...xScaleConfig
       },
       [yLabelValue]: {
-        alias: yLabelName
+        alias: yLabelName,
+        ...yScaleConfig
       }
     });
 
-    _chart[chartType]()
-      .position(`${xLabelValue}*${yLabelValue}`)
-      .color(colorCurves || xLabelValue);
     _chart.axis(xLabelValue, {
       title: {
         textStyle: xLabelTextStyle,
         position: 'center',
-        offset: 35
-      }
+        offset: 40
+      },
+      line: xLineStyle
     });
-    _chart.point().position(`${xLabelValue}*${yLabelValue}`);
     _chart.axis(yLabelValue, {
       title: {
-        offset: 35,
+        offset: 40,
         textStyle: yLabelTextStyle,
         position: 'center'
-      }
+      },
+      line: yLineStyle
     });
+
     _chart.tooltip({
       useHtml: true,
       htmlContent: function(title, items) {
@@ -110,6 +119,34 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
         `;
       }
     });
+
+    chartType === 'polygon' && labelValue
+      ? _chart[chartType]()
+          .position(`${xLabelValue}*${yLabelValue}`)
+          .color(labelValue, scaleColor)
+          .label(labelValue, {
+            offset: 0,
+            textStyle: {
+              fill: '#f44',
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)'
+            }
+          })
+      : multiItem
+      ? _chart[chartType]()
+          .position(`${xLabelValue}*${yLabelValue}`)
+          .color(multiItem)
+      : _chart[chartType]().position(`${xLabelValue}*${yLabelValue}`);
+
+    chartType === 'polygon'
+      ? console.log(123)
+      : multiItem
+      ? _chart
+          .point()
+          .position(`${xLabelValue}*${yLabelValue}`)
+          .color(multiItem)
+      : _chart.point().position(`${xLabelValue}*${yLabelValue}`);
+
     _chart.render();
 
     // @ts-ignore
@@ -121,7 +158,6 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
     const { chart } = this.state;
     //　@ts-ignore
     chart !== null && chart.changeData(data);
-    this.isForceUpdate();
   }
 
   public render() {

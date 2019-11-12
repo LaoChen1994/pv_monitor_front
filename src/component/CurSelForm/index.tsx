@@ -54,6 +54,8 @@ export const CurSelForm: React.FC<ICurSelForm> = props => {
     }
   };
 
+  const resetFormValue = () => _setFormValue(initCurSelValue);
+
   const updateCurByDetail = () => {
     updateCurveByAdvanced && updateCurveByAdvanced(formValue);
   };
@@ -222,6 +224,9 @@ export const CurSelForm: React.FC<ICurSelForm> = props => {
                 onClick={updateCurByDetail}
               >
                 搜索
+              </Button>
+              <Button type="danger" outline onClick={resetFormValue}>
+                重置
               </Button>
             </div>
           </Col>

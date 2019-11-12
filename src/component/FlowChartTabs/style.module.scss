@@ -1,0 +1,66 @@
+@import '../../sass/minxin.scss';
+
+.cardContent {
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.action {
+  color: $pink;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    color: $red;
+  }
+}
+
+.content {
+  @extend ._content_text;
+}
+
+.cWrapper {
+  display: flex;
+  align-items: center;
+}
+
+
+.dContent {
+  line-height: 24px;
+  width: 300px;
+  margin-left: 20px;
+}
+
+.block {
+  display: flex;
+  width: 100%;
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: flex-start;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .content {
+    flex: 1;
+    font-size: 14px;
+    line-height: 15px;
+    color: $darkPurple;
+  }
+}
+
+.mark {
+  flex: 0 15px;
+  width: 15px;
+  height: 15px;
+  background: $purple;
+  border-radius: 50%;
+  margin-right: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
