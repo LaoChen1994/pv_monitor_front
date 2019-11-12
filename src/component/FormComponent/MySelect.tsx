@@ -1,10 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { Select, ISelectProps } from 'zent';
 import { ICommonFormProps } from '../../interface';
 import styles from './myStyle.module.scss';
 import cx from 'classnames';
 
-export const MySelect: React.FC<ICommonFormProps & ISelectProps> = props => {
+export interface ISelectDataItem {
+  value: any;
+  text: string;
+}
+
+export type ISelectData = ISelectDataItem[];
+
+export interface IRefObj {
+  clearSelct: () => void;
+}
+
+interface IMySelectProps {
+  margin?: string;
+  cRef?: React.MutableRefObject<IRefObj>;
+}
+
+export const MySelect: React.FC<
+  ICommonFormProps & ISelectProps & IMySelectProps
+> = props => {
   const {
     name,
     label,
@@ -15,6 +33,8 @@ export const MySelect: React.FC<ICommonFormProps & ISelectProps> = props => {
     align = 'start',
     placeholder = '',
     value,
+    margin,
+    cRef,
     ...res
   } = props;
 
@@ -35,12 +55,20 @@ export const MySelect: React.FC<ICommonFormProps & ISelectProps> = props => {
     setValue(value);
   }, [value]);
 
+  const clearSelct = () => {
+    setValue('');
+    _onChange && _onChange(name, '');
+  };
+
+  useImperativeHandle(cRef, () => ({ clearSelct }));
+
   return (
     <div
       className={cx({ [styles.layout]: true })}
       style={{
         flexDirection: layout === 'horizontal' ? 'row' : 'column',
-        justifyContent: align
+        justifyContent: align,
+        margin
       }}
     >
       {label && (

@@ -10,7 +10,11 @@ import {
   IPlotCurve,
   TDetailFault,
   IKeyValueOnCurves,
-  IMyCurSelFormParam
+  IMyCurSelFormParam,
+  IAccurateList,
+  IAccItem,
+  IModelingForm,
+  IFlowchartItem
 } from './interface';
 
 export const routes: INavItem[] = [
@@ -73,7 +77,9 @@ export const notesList: string[] = [
   '通过查询按钮可以，在列表中可查询到筛选后的数据结果'
 ];
 
-export const nameTrans: ITransKeys<IPlotCurve & IKeyValueOnCurves> = {
+export const nameTrans: ITransKeys<
+  IPlotCurve & IKeyValueOnCurves & IAccurateList & IAccItem
+> = {
   temperature: '温度',
   irradiance: '幅照度',
   work_status: '运行状态',
@@ -82,7 +88,11 @@ export const nameTrans: ITransKeys<IPlotCurve & IKeyValueOnCurves> = {
   Impp: '最大功率点电流',
   Pmpp: '最大功率点功率',
   Isc: '短路电流',
-  Voc: '开路电压'
+  Voc: '开路电压',
+  trainSet: '训练集',
+  testSet: '测试集',
+  mean: '均值',
+  std: '方差'
 };
 
 export const faultTypes: TDetailFault = {
@@ -107,4 +117,53 @@ export const initCurSelValue: IMyCurSelFormParam = {
   dataType: 0
 };
 
+export const initModelForm: IModelingForm = {
+  modelSelection: 'resnet',
+  modulesSelection: undefined,
+  curveID: -1,
+  curveQuantity: 0
+};
+
 export const mapKey = '4e55cfed61e358a2e5de01661fb97dbc';
+
+export const flowchartContent: IFlowchartItem[] = [
+  {
+    title: '数据清洗',
+    detail: [
+      '新的IV特性曲线由原始采集的IV特性曲线下采样ResNum个点得到的',
+      '电压下采样过程是从0至开路电压之间找到相应的均分采样点，之后找到与之最近的电压值，通过线性插值法来估计对应的电流值',
+      '电流下采样的方法和电压下采样方法类似，在0至短路电流之间找到相应个数的采样电流点，之后利用线性插值估计响应的电压值',
+      '完成下采样后通过EHA-NMS,来计算其RMSE值，将其与阈值Eth进行比较，若其大于阈值则认为其为故障曲线，删除;否则，留下'
+    ],
+    imgUrl: 'dataFilter_gaitubao_1106x933.png'
+  },
+  {
+    title: '网格采样',
+    detail: [
+      '在0 ℃~40 ℃和 0 W/㎡ ~ 1000 W/㎡,之间以10℃和100W/㎡为间隔，将数据集进行网格分区, 并设置下采样数量N为300',
+      '对于每个网格中超过下采样个数N的网格，在网格中随机下采样得到N个样本作为建模数据集，并将其中70%作为训练集，30%作为测试集',
+      '对于每个网格中超过下采样个数N的网格，网格中所有的样本都将被选择，并将70%作为训练集，30%作为测试集',
+      '在模型训练的过程中，采用10折交叉验证来提升训练模型的泛化能力,我们将训练集中的90%的数据用于训练所提出的ResNet模型，另外的10%用来进行交叉验证'
+    ],
+    imgUrl: 'gridSampling_gaitubao_800x800.png'
+  },
+  {
+    title: '网络模型',
+    detail: [
+      '所提出的1-D ResNet具有一层输入层, 五层一维残差层,和最后一层输出层',
+      '该1-D ResNet能够自动从数据中提取复杂抽象的特征',
+      '通过一维卷积计算可以获得更多临近特征的信息来建立和标签值之间的关系',
+      '残查网络可以提升网络的性能,并在端到端的训练中避免梯度消失和梯度爆炸问题'
+    ],
+    imgUrl: 'Structure_modeling_gaitubao_800x800.png'
+  },
+  {
+    title: '训练过程',
+    detail: [
+      '在每次Epoch时, 通过权重(weight)和偏差(bias)在前向传播中的计算获得上一个epoch更新或初始化后的预测值',
+      '当在训练过程中得到相较于上一次具有更高准确率的模型，则采用贪心策略进行保存，获得更准确的训练模型',
+      '在反向传播过程中，通过Adam优化算法对权重和偏差进行更新，最终得到的ResNet模型即为最优模型.'
+    ],
+    imgUrl: 'modeling_flowchart_gaitubao_800x800.png'
+  }
+];

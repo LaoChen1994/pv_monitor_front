@@ -15,7 +15,8 @@ import {
   IPlotCurve,
   TAEC,
   IKeyValueOnCurves,
-  IMyCurSelFormParam
+  IMyCurSelFormParam,
+  TDetailFault
 } from '../../interface';
 import styles from './style.module.scss';
 import cx from 'classnames';
@@ -120,11 +121,12 @@ export const IVCurveSearch: React.FC<
     const { params } = props.match;
     const { id } = params;
     const getData = async (index: number) => {
-      const res = await getPlotCurve(index);
-      const { data } = res;
+      const result = await getPlotCurve(index);
+      const { data } = result;
+      let { work_status } = data;
       // @ts-ignore
-      data.work_status = faultTypes[data.work_status];
-      setCurveData(data);
+      work_status = faultTypes[work_status];
+      setCurveData({ ...data, work_status });
     };
     getData(Number.isNaN(+id) ? 1 : +id);
   }, []);
@@ -133,9 +135,10 @@ export const IVCurveSearch: React.FC<
     const getData = async (index: number) => {
       const res = await getPlotCurve(index);
       const { data } = res;
+      let { work_status } = data;
       // @ts-ignore
-      data.work_status = faultTypes[data.work_status];
-      setCurveData(data);
+      work_status = faultTypes[work_status];
+      setCurveData({ ...data, work_status });
     };
     getData(curveData.pk);
   }, [curveData.pk]);

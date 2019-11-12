@@ -33,6 +33,33 @@ export interface IToken {
   token: string;
 }
 
+export interface IAccItem {
+  mean: number;
+  std: number;
+}
+
+export interface IAccurateInfo {
+  rmse: IAccItem;
+  nrmse: IAccItem;
+}
+
+export interface IAccurateDataset {
+  dataType: string;
+  itemType: string;
+  mean: number;
+  std: number;
+}
+
+export interface IRange {
+  xRange: [number, number];
+  yRange: [number, number];
+}
+
+export interface IAccurateList {
+  testSet: IAccurateInfo;
+  trainSet: IAccurateInfo;
+}
+
 export interface ITableSearchWithNumber {
   data: ITableSearchInfo[];
   totalNumber: number;
@@ -48,6 +75,10 @@ export type GetMoDataNumber = (
 
 export type TGetToken = () => Promise<ICommonApiInterface<IToken>>;
 
+export type TGetModelingAccuracy = (
+  module: string
+) => Promise<ICommonApiInterface<{ accuracyList: IAccurateList }>>;
+
 export interface ISearchGridProp {
   searchDataset: ITableSearchInfo[];
   handlePageChange: (current: number) => void;
@@ -55,19 +86,32 @@ export interface ISearchGridProp {
   pageLink?: (current: number) => void;
 }
 
-export type TFaultTypes = 'normal' | 'partial shadow_1';
-
 export interface TDetailFault {
   normal: string;
   'partial shadow_1': string;
   'partial shadow_2': string;
   'partial shadow_3': string;
-  'short circuit_1': '短路故障 1';
-  'short circuit_2': '短路故障 2';
-  degradation_1: '老化故障 1';
-  degradation_2: '老化故障 2';
-  open_circuit: '开路故障';
+  'short circuit_1': string;
+  'short circuit_2': string;
+  degradation_1: string;
+  degradation_2: string;
+  open_circuit: string;
 }
+
+export interface IGetDataDistribute {
+  data: [number, number, number][];
+  maxCount: number;
+}
+
+export interface IHeatMapItem {
+  irr: number;
+  temp: number;
+  quantity: number;
+}
+
+export type TGetDataDistrib = (
+  module: moduleType
+) => Promise<ICommonApiInterface<IGetDataDistribute>>;
 
 export type TGetTableInfo = (
   start: number,
@@ -81,6 +125,13 @@ export interface IPageInfo {
   current: number;
   pageSize: number;
   totalItem: number;
+}
+
+export interface IModelingForm {
+  modelSelection: string;
+  modulesSelection: moduleType;
+  curveID: number;
+  curveQuantity: number;
 }
 
 export interface INavItem {
@@ -190,3 +241,71 @@ export type TGetCurvesAdvanced = (
   fault_type: keyof TDetailFault,
   data_type: 0 | 1
 ) => Promise<ICommonApiInterface<{ query_list: number[] }>>;
+
+export type moduleType =
+  | 'aSiMicro03038'
+  | 'CdTe75669'
+  | 'xSi11246'
+  | 'mSi0251'
+  | 'GIGS'
+  | undefined;
+
+export interface IOptions<T> {
+  fields: T;
+  pk: number;
+  model: string;
+}
+
+export interface IDataTypeOpt {
+  dataType: moduleType;
+  moduleCharcter: string;
+}
+
+export interface ISelectionOpt {
+  modelName: string;
+  modelType: string;
+  modelUse: number;
+}
+
+export interface IGetOptions {
+  dataTypeOptions: IOptions<IDataTypeOpt>[];
+  selectionOpions: IOptions<ISelectionOpt>[];
+}
+
+export interface IModelRes {
+  current: number[];
+  voltage: number[];
+  irradiance: number;
+  temperature: number;
+  modelRes: [number[]];
+}
+
+export interface IModelResItem {
+  vol: number;
+  curr: number;
+  type: string;
+}
+
+export type TGetSelectOptions = () => Promise<ICommonApiInterface<IGetOptions>>;
+export type TGetModelResById = (
+  model: string,
+  module: moduleType,
+  curveId: number
+) => Promise<ICommonApiInterface<{ data: IModelRes }>>;
+
+export type TGetModelCurveQuantity = (
+  module: moduleType
+) => Promise<ICommonApiInterface<{ count: number }>>;
+
+export interface IDialogDetail {
+  imgUrl: string;
+  tabber?: string;
+  content?: string;
+}
+
+export interface IFlowchartItem {
+  title: string;
+  detail: string[];
+  // dialogContent?: IDialogDetail;
+  imgUrl: string;
+}

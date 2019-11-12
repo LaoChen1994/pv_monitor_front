@@ -1,13 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useImperativeHandle,
+  ReactNode
+} from 'react';
 import { IInputProps } from 'zent';
 import { Input, Notify } from 'zent';
 import cx from 'classnames';
 import styles from './myStyle.module.scss';
 import { ICommonFormProps } from '../../interface';
 
+export interface IInputRef {
+  clearInput: () => void;
+}
+
 interface Props {
   validator?: (value: any) => boolean;
   ErrorMsg?: string;
+  cRef?: React.MutableRefObject<IInputRef>;
+  margin?: string;
+  caption?: string | ReactNode;
 }
 
 export const MyInput: React.FC<
@@ -24,6 +37,9 @@ export const MyInput: React.FC<
     validator,
     align = 'start',
     ErrorMsg,
+    cRef,
+    margin,
+    caption,
     ...res
   } = props;
 
@@ -49,32 +65,47 @@ export const MyInput: React.FC<
     inputEl && inputEl.current.focus();
   };
 
-  return (
-    <div
-      className={cx({ [styles.layout]: true })}
-      style={{
-        flexDirection: layout === 'horizontal' ? 'row' : 'column',
-        justifyContent: align
-      }}
-    >
-      {label && (
-        <span
-          className={cx({ [styles.hasColon]: hasColon, [styles.label]: true })}
-          onClick={focusInput}
-        >
-          {label}
-        </span>
-      )}
+  const clearInput = () => {
+    const val = type === 'number' ? 0 : '';
+    _setValue(val);
+    eventOnChange && eventOnChange(name, val);
+  };
 
-      {/* 
+  useImperativeHandle(cRef, () => ({ clearInput }));
+
+  return (
+    <>
+      <div
+        className={cx({ [styles.layout]: true })}
+        style={{
+          flexDirection: layout === 'horizontal' ? 'row' : 'column',
+          justifyContent: align,
+          margin: margin
+        }}
+      >
+        {label && (
+          <span
+            className={cx({
+              [styles.hasColon]: hasColon,
+              [styles.label]: true
+            })}
+            onClick={focusInput}
+          >
+            {label}
+          </span>
+        )}
+
+        {/* 
       // @ts-ignore */}
-      <Input
-        type={type}
-        value={_value}
-        onChange={_onChange}
-        ref={inputEl}
-        {...res}
-      ></Input>
-    </div>
+        <Input
+          type={type}
+          value={_value}
+          onChange={_onChange}
+          ref={inputEl}
+          {...res}
+        ></Input>
+      </div>
+      {caption && <div className={styles.caption}>{caption}</div>}
+    </>
   );
 };

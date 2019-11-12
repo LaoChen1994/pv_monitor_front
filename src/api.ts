@@ -6,7 +6,13 @@ import {
   TGetToken,
   TGetCurvesQuantity,
   TGetCurvesAdvanced,
-  TGetSampleCurve
+  TGetSampleCurve,
+  TGetModelingAccuracy,
+  TGetSelectOptions,
+  TGetModelCurveQuantity,
+  moduleType,
+  TGetModelResById,
+  TGetDataDistrib
 } from './interface';
 import { filterParamInObj } from './utils';
 
@@ -28,12 +34,26 @@ export const getPlotCurve: TGetPlotCurve = async num => {
   });
 };
 
+export const getToken: TGetToken = async () => Axios.get(`${HOST}/getToken/`);
+
 export const getCurveQuantity: TGetCurvesQuantity = async () => {
   const token = await getToken();
   const { token: csrfmiddlewaretoken } = token.data;
 
   return Axios.get(`${HOST}/query_fault_number`, {
     params: { csrfmiddlewaretoken }
+  });
+};
+
+export const getMoDataDis: TGetDataDistrib = async module => {
+  const { data } = await getToken();
+  const { token: csrfmiddlewaretoken } = data;
+
+  return Axios.get(`${HOST}/query_model_data_distribute`, {
+    params: {
+      csrfmiddlewaretoken,
+      module
+    }
   });
 };
 
@@ -95,4 +115,45 @@ export const getSearchTableData: TGetTableInfo = async (
   return Axios.get(`${HOST}/info_search`, { params });
 };
 
-export const getToken: TGetToken = async () => Axios.get(`${HOST}/getToken/`);
+export const getAccurateList: TGetModelingAccuracy = async (module: string) => {
+  const { data } = await getToken();
+  const { token: csrfmiddlewaretoken } = data;
+
+  return Axios.get(`${HOST}/new_modeling_accurate`, {
+    params: {
+      csrfmiddlewaretoken,
+      module
+    }
+  });
+};
+
+export const getModeOptions: TGetSelectOptions = async () =>
+  Axios.get(`${HOST}/query_model_options`);
+
+export const getModelCurQuant: TGetModelCurveQuantity = async (
+  module: moduleType = 'aSiMicro03038'
+) => {
+  const { data } = await getToken();
+  const { token } = data;
+  return Axios.get(`${HOST}/query_modules_data_quantity`, {
+    params: { module, csrfmiddlewaretoken: token }
+  });
+};
+
+export const getModelResById: TGetModelResById = async (
+  model,
+  module,
+  curveId
+) => {
+  const { data } = await getToken();
+  const { token } = data;
+
+  return Axios.get(`${HOST}/query_module_curve_by_id`, {
+    params: {
+      model,
+      module,
+      curveId,
+      csrfmiddlewaretoken: token
+    }
+  });
+};
