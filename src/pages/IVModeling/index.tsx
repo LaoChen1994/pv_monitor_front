@@ -21,6 +21,7 @@ import { MyChart } from '../../component/MyChart';
 import { FlowchartTabs } from '../../component/FlowChartTabs';
 
 import { getModelResById, getModelCurQuant, getMoDataDis } from '../../api';
+import { TooltipItem } from '@antv/g2';
 
 interface Props {}
 
@@ -32,8 +33,9 @@ export const IVModeling: React.FC<Props> = () => {
   const [modelRes, setModelRes] = useState<IModelResItem[]>([]);
   const [heatMapData, setHeatMapData] = useState<IHeatMapItem[]>([]);
   const [maxCount, setMaxCount] = useState<number>(0);
-
   const [_f, setF] = useState<number>(0);
+
+  const { setPageLoading } = useAppContext();
 
   const xAxisValue = Array.from(
     { length: 10 },
@@ -45,14 +47,17 @@ export const IVModeling: React.FC<Props> = () => {
   );
 
   const updateAccurate = async (module: moduleType = 'aSiMicro03038') => {
+    setPageLoading && setPageLoading(true);
     const { data } = await getAccurateList(module);
     const { accuracyList } = data;
     const dataset = _handleAccList(accuracyList);
     setAccurateList(dataset);
     setNowModule(module);
+    setPageLoading && setPageLoading(false);
   };
 
   const updateModDataDis = async (module: moduleType = 'aSiMicro03038') => {
+    setPageLoading && setPageLoading(true);
     const { data: res } = await getMoDataDis(module);
     const { data, maxCount } = res;
     const hData = data.reduce<IHeatMapItem[]>((prev, _curr) => {
@@ -68,6 +73,7 @@ export const IVModeling: React.FC<Props> = () => {
 
     setMaxCount(maxCount);
     setHeatMapData(hData);
+    setPageLoading && setPageLoading(false);
   };
 
   const _handleAccList = (accuracyList: IAccurateList) =>
@@ -158,6 +164,7 @@ export const IVModeling: React.FC<Props> = () => {
       modulesSelection: module,
       curveID
     } = getFormValue() as IModelingForm;
+    setPageLoading && setPageLoading(true);
     const { data } = await getModelResById(model, module, curveID);
     const { data: res } = data;
     const { modelRes, current, voltage } = res;
@@ -175,6 +182,7 @@ export const IVModeling: React.FC<Props> = () => {
     updateAccurate(module);
     setModelRes(_modelRes);
     updateModDataDis(module);
+    setPageLoading && setPageLoading(false);
   };
 
   const clearTopChart = () => {
@@ -184,6 +192,46 @@ export const IVModeling: React.FC<Props> = () => {
   const renderResultTab = () => (
     <Grid datasets={accurateList} columns={getColomn}></Grid>
   );
+
+  const cosCurveTool: (title: string, items: TooltipItem[]) => string = (
+    title,
+    items
+  ) => {
+    const data = items.reduce<string>((prev, curr) => {
+      prev += `<div><span style="width:10px;height:10px;border-radius:50%;background:${
+        curr.color
+      };display:inline-block"></span><span style="line-height:20px;vertical-align:middle">${
+        curr.name === 'measured' ? '实测数据' : '建模数据'
+      }</span>: ${(+curr.value).toFixed(5)} (A)</div>`;
+
+      return prev;
+    }, '');
+    return `
+      <div style="color:red;">
+        <div>电压: ${(+title).toFixed(5)} (V)</div>
+        ${data}
+      </div>
+    `;
+  };
+
+  const cosHeatmapTool: (title: string, items: TooltipItem[]) => string = (
+    title,
+    items
+  ) => {
+    console.log(title, items);
+
+    const data = items.reduce<string>((prev, curr) => {
+      const { point } = curr;
+
+      const { irr, temp, quantity } = point.point as IHeatMapItem;
+
+      prev += `<div>幅照度区间: ${xAxisValue[irr]}</div><div>温度区间: ${yAxisValue[temp]}</div><div>样本数量: ${quantity}</div>`;
+
+      return prev;
+    }, '');
+
+    return `<div>${data}</div>`;
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -254,7 +302,10 @@ export const IVModeling: React.FC<Props> = () => {
                 opacity: 0.8
               }}
               multiItem="type"
-              padding={{ bottom: 50, top: 10, left: 50, right: 10 }}
+              padding={{ bottom: 50, top: 10, left: 80, right: 10 }}
+              colorCurves={['#f44', '#00918e']}
+              toolTipCosTemp={cosCurveTool}
+              toolTipUseHTMLTemp={true}
             ></MyChart>
           </div>
         </div>
@@ -280,7 +331,7 @@ export const IVModeling: React.FC<Props> = () => {
               xAxisValues={xAxisValue}
               yAxisValues={yAxisValue}
               containerWidth="100%"
-              containerHeight="200px"
+              containerHeight="320px"
               xLabelTextStyle={{
                 fill: '#ff4444',
                 fontWeight: 'bolder',
@@ -292,6 +343,8 @@ export const IVModeling: React.FC<Props> = () => {
                 fontSize: 16
               }}
               scaleColor={['#fff4e0', '#73d2f3', '#26baee', '#465881']}
+              toolTipUseHTMLTemp={true}
+              toolTipCosTemp={cosHeatmapTool}
             ></MyChart>
           </div>
           <div className={styles.rbRight}>

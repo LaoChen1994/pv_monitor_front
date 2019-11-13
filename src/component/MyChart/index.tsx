@@ -1,5 +1,5 @@
 import React from 'react';
-import G2, { Styles, Scale } from '@antv/g2';
+import G2, { Styles, TooltipConfig, TooltipItem } from '@antv/g2';
 import { filterParamInObj } from '../../utils';
 
 interface IAppProps {
@@ -11,7 +11,7 @@ interface IAppProps {
   xLabelName?: string;
   yLabelName?: string;
   chartType?: 'line' | 'interval' | 'point' | 'polygon';
-  colorCurves?: string;
+  colorCurves?: string[];
   containerId: string;
   padding?: { top: number; right: number; bottom: number; left: number };
   xLabelTextStyle?: Styles.text;
@@ -27,6 +27,9 @@ interface IAppProps {
   yAxisValues?: string[];
   labelValue?: string;
   scaleColor?: string[];
+  toolTipConfig?: TooltipConfig;
+  toolTipUseHTMLTemp?: boolean;
+  toolTipCosTemp?: (title: string, items: TooltipItem[]) => string;
 }
 
 interface IState {
@@ -62,7 +65,11 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
       xAxisValues,
       yAxisValues,
       labelValue,
-      scaleColor = ['#73d2f3', '#10316b']
+      scaleColor = ['#73d2f3', '#10316b'],
+      colorCurves = [],
+      toolTipConfig,
+      toolTipUseHTMLTemp,
+      toolTipCosTemp
     } = this.props;
 
     const _chart = new G2.Chart({
@@ -74,6 +81,30 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
 
     const xScaleConfig = filterParamInObj({ type: xType, values: xAxisValues });
     const yScaleConfig = filterParamInObj({ type: yType, values: yAxisValues });
+
+    const htmlTemp: (title: string, items: TooltipItem[]) => string = (
+      title: string,
+      items: TooltipItem[]
+    ) => {
+      const { point } = items[0];
+      const { _origin } = point;
+      return `
+      <div class="g2-tooltip">
+      <div class="g2-tooltip-title" style="margin-bottom: 4px;text-align:left">数据详情:</div>
+        <ul class="g2-tooltip-list" style="text-align:left">
+          <li>${xLabelName}: ${_origin[xLabelValue]}</li>
+          <li>${yLabelName}: ${_origin[yLabelValue]}</li>
+        </ul>
+      </div>
+      `;
+    };
+
+    const _toolTipConfig: TooltipConfig =
+      toolTipConfig ||
+      (toolTipUseHTMLTemp
+        ? { useHtml: true, htmlContent: toolTipCosTemp || htmlTemp }
+        : {});
+    console.log(_toolTipConfig);
 
     _chart.source(data, {
       [xLabelValue]: {
@@ -103,22 +134,7 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
       line: yLineStyle
     });
 
-    _chart.tooltip({
-      useHtml: true,
-      htmlContent: function(title, items) {
-        const { point } = items[0];
-        const { _origin } = point;
-        return `
-        <div class="g2-tooltip">
-        <div class="g2-tooltip-title" style="margin-bottom: 4px;text-align:left">数据详情:</div>
-          <ul class="g2-tooltip-list" style="text-align:left">
-            <li>${xLabelName}: ${_origin[xLabelValue]}</li>
-            <li>${yLabelName}: ${_origin[yLabelValue]}</li>
-          </ul>
-        </div>
-        `;
-      }
-    });
+    _chart.tooltip(_toolTipConfig);
 
     chartType === 'polygon' && labelValue
       ? _chart[chartType]()
@@ -135,7 +151,7 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
       : multiItem
       ? _chart[chartType]()
           .position(`${xLabelValue}*${yLabelValue}`)
-          .color(multiItem)
+          .color(multiItem, colorCurves)
       : _chart[chartType]().position(`${xLabelValue}*${yLabelValue}`);
 
     chartType === 'polygon'
@@ -144,7 +160,8 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
       ? _chart
           .point()
           .position(`${xLabelValue}*${yLabelValue}`)
-          .color(multiItem)
+          .color(multiItem, colorCurves)
+          .shape(multiItem, ['hollowCircle', 'hollowSquare', 'hollowTriangle'])
       : _chart.point().position(`${xLabelValue}*${yLabelValue}`);
 
     _chart.render();

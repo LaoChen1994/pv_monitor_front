@@ -160,6 +160,7 @@ export interface IRadioType {
 export interface IAppContext {
   handleNavChange?: (index: number) => () => void;
   addNewBreads?: (bread: IBreadcrumbItemProps) => void;
+  setPageLoading?: (status: boolean) => void;
 }
 
 export interface IMyMapProps {
