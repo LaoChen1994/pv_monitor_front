@@ -13,6 +13,8 @@ import { Footer } from './component/Footer';
 import styles from './sass/index.module.scss';
 import './sass/reset.css';
 
+import { BlockLoading } from 'zent';
+
 const App: React.FC = () => {
   const [navItemActive, setActive] = useState<number>(0);
 
@@ -24,6 +26,7 @@ const App: React.FC = () => {
     [setActive]
   );
   const [breads, setBreads] = useState<IBreadcrumbItemProps[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const renderNav = (elem: INavItem, index: number): ReactNode => {
     const { urlMatch, name } = elem;
@@ -45,6 +48,10 @@ const App: React.FC = () => {
     );
   };
 
+  const setPageLoading = (status: boolean) => {
+    setLoading(status);
+  };
+
   const addNewBreads = (bread: IBreadcrumbItemProps) => {
     setBreads([{ name: '官网首页', href: '//www.fzu.edu.cn' }, bread]);
   };
@@ -64,23 +71,34 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <AppContext.Provider value={{ handleNavChange, addNewBreads }}>
+      <AppContext.Provider
+        value={{ handleNavChange, addNewBreads, setPageLoading }}
+      >
         <Router>
           <nav>
             <Drawer width={'200px'} padding={'30px 0'}>
               <div>{routes.map((elem, index) => renderNav(elem, index))}</div>
             </Drawer>
           </nav>
+
           <div className={cx({ [styles.header]: true })}>
             <Breadcrumb breads={breads}></Breadcrumb>
           </div>
-          <Switch>
-            <div className={cx({ [styles.wrapper]: true })}>
-              {routes.map((elem, index) => renderNavItem(elem, index))}
-              {/* 这个空标签不能删 */}
-              <div className={cx({ [styles.push]: true })}></div>
-            </div>
-          </Switch>
+          <BlockLoading
+            icon="circle"
+            iconText="页面加载中,请稍等"
+            iconSize={64}
+            loading={isLoading}
+          >
+            <Switch>
+              <div className={cx({ [styles.wrapper]: true })}>
+                {routes.map((elem, index) => renderNavItem(elem, index))}
+                {/* 这个空标签不能删 */}
+                <div className={cx({ [styles.push]: true })}></div>
+              </div>
+            </Switch>
+          </BlockLoading>
+
           <div className={cx({ [styles.footer]: true })}>
             <Footer />
           </div>

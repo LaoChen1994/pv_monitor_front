@@ -15,8 +15,7 @@ import {
   IPlotCurve,
   TAEC,
   IKeyValueOnCurves,
-  IMyCurSelFormParam,
-  TDetailFault
+  IMyCurSelFormParam
 } from '../../interface';
 import styles from './style.module.scss';
 import cx from 'classnames';
@@ -32,10 +31,9 @@ interface IParams {
   [key: string]: any;
 }
 
-export const IVCurveSearch: React.FC<
-  Props & RouteComponentProps<IParams>
-> = props => {
-  const { handleNavChange } = useAppContext();
+export const IVCurveSearch: React.FC<Props &
+  RouteComponentProps<IParams>> = props => {
+  const { handleNavChange, setPageLoading } = useAppContext();
   const [center, setCenter] = useState<FullLngLatPos>({
     longitude: 119.200382,
     latitude: 26.063076
@@ -133,12 +131,14 @@ export const IVCurveSearch: React.FC<
 
   useEffect(() => {
     const getData = async (index: number) => {
+      setPageLoading && setPageLoading(true);
       const res = await getPlotCurve(index);
       const { data } = res;
       let { work_status } = data;
       // @ts-ignore
       work_status = faultTypes[work_status];
       setCurveData({ ...data, work_status });
+      setPageLoading && setPageLoading(false);
     };
     getData(curveData.pk);
   }, [curveData.pk]);
@@ -323,6 +323,7 @@ export const IVCurveSearch: React.FC<
                 fill: '#ff4444',
                 fontWeight: 'bolder'
               }}
+              toolTipUseHTMLTemp={true}
             ></MyChart>
           </div>
           <div className={styles.topChart}>
@@ -346,6 +347,7 @@ export const IVCurveSearch: React.FC<
                 fill: '#ff4444',
                 fontWeight: 'bolder'
               }}
+              toolTipUseHTMLTemp={true}
             ></MyChart>
           </div>
         </div>
