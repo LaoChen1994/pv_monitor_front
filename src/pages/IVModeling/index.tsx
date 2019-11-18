@@ -218,8 +218,6 @@ export const IVModeling: React.FC<Props> = () => {
     title,
     items
   ) => {
-    console.log(title, items);
-
     const data = items.reduce<string>((prev, curr) => {
       const { point } = curr;
 
@@ -261,6 +259,7 @@ export const IVModeling: React.FC<Props> = () => {
             </div>
             <div className={styles.middle}>
               <ModelForm
+                // @ts-ignore
                 getFormValue={getFormValue}
                 setFormValue={setFormValue}
                 getModelData={getModelData}

@@ -18,11 +18,12 @@ export interface IRefObj {
 interface IMySelectProps {
   margin?: string;
   cRef?: React.MutableRefObject<IRefObj>;
+  data: ISelectData;
 }
 
-export const MySelect: React.FC<
-  ICommonFormProps & ISelectProps & IMySelectProps
-> = props => {
+export const MySelect: React.FC<ICommonFormProps &
+  ISelectProps &
+  IMySelectProps> = props => {
   const {
     name,
     label,
@@ -59,6 +60,10 @@ export const MySelect: React.FC<
     setValue('');
     _onChange && _onChange(name, '');
   };
+
+  useEffect(() => {
+    value && _onChange && _onChange(name, value);
+  }, []);
 
   useImperativeHandle(cRef, () => ({ clearSelct }));
 

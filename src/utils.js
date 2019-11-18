@@ -7,3 +7,8 @@ export const filterParamInObj = (
     : Object.fromEntries(Object.entries(target).filter(elem => rule(elem[1])));
 
 export const num2Exp = (num, bit = 3) => (+num.toFixed(bit)).toExponential();
+
+export const hasUnuseData = (
+  arr,
+  filter = elem => [undefined, null, '', -1].includes(elem)
+) => arr.some(filter);

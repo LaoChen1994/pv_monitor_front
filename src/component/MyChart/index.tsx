@@ -6,6 +6,7 @@ interface IAppProps {
   data: any[];
   containerWidth?: string | number;
   containerHeight?: string | number;
+  coordType?: 'rect' | 'polar' | 'theta' | 'helix';
   xLabelValue: string;
   yLabelValue: string;
   xLabelName?: string;
@@ -44,7 +45,7 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
     };
   }
 
-  componentDidMount() {
+  paintChart(repaint = false) {
     const {
       containerId,
       data,
@@ -69,7 +70,8 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
       colorCurves = [],
       toolTipConfig,
       toolTipUseHTMLTemp,
-      toolTipCosTemp
+      toolTipCosTemp,
+      coordType = 'rect'
     } = this.props;
 
     const _chart = new G2.Chart({
@@ -78,6 +80,8 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
       height: +containerHeight || 300,
       padding
     });
+
+    _chart.coord(coordType);
 
     const xScaleConfig = filterParamInObj({ type: xType, values: xAxisValues });
     const yScaleConfig = filterParamInObj({ type: yType, values: yAxisValues });
@@ -104,7 +108,6 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
       (toolTipUseHTMLTemp
         ? { useHtml: true, htmlContent: toolTipCosTemp || htmlTemp }
         : {});
-    console.log(_toolTipConfig);
 
     _chart.source(data, {
       [xLabelValue]: {
@@ -164,16 +167,27 @@ export class MyChart extends React.PureComponent<IAppProps, IState> {
           .shape(multiItem, ['hollowCircle', 'hollowSquare', 'hollowTriangle'])
       : _chart.point().position(`${xLabelValue}*${yLabelValue}`);
 
-    _chart.render();
+    repaint ? _chart.repaint() : _chart.render();
 
     // @ts-ignore
     this.setState({ chart: _chart });
   }
 
-  componentWillUpdate() {
-    const { data } = this.props;
+  componentDidMount() {
+    this.paintChart();
+  }
+
+  componentDidUpdate(prevProps: IAppProps) {
+    const { data, coordType: newCoordType, containerId } = this.props;
     const { chart } = this.state;
-    //　@ts-ignore
+    const { coordType } = prevProps;
+
+    if (newCoordType !== coordType) {
+      const node: HTMLElement | null = document.getElementById(containerId);
+
+      node && (node.innerHTML = '');
+      this.paintChart();
+    }
     chart !== null && chart.changeData(data);
   }
 

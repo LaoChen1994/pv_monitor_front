@@ -14,7 +14,10 @@ import {
   IAccurateList,
   IAccItem,
   IModelingForm,
-  IFlowchartItem
+  IFlowchartItem,
+  IFaultNumberRes,
+  IImgSwiper,
+  IModelStructure
 } from './interface';
 
 export const routes: INavItem[] = [
@@ -77,9 +80,17 @@ export const notesList: string[] = [
   '通过查询按钮可以，在列表中可查询到筛选后的数据结果'
 ];
 
-export const nameTrans: ITransKeys<
-  IPlotCurve & IKeyValueOnCurves & IAccurateList & IAccItem
-> = {
+export const faultNumberInit: IFaultNumberRes = {
+  expDataCount: 0,
+  simDataCount: 0,
+  total: 0,
+  faultNumber: []
+};
+
+export const nameTrans: ITransKeys<IPlotCurve &
+  IKeyValueOnCurves &
+  IAccurateList &
+  IAccItem> = {
   temperature: '温度',
   irradiance: '幅照度',
   work_status: '运行状态',
@@ -104,7 +115,16 @@ export const faultTypes: TDetailFault = {
   'short circuit_2': '短路故障 2',
   degradation_1: '老化故障 1',
   degradation_2: '老化故障 2',
-  open_circuit: '开路故障'
+  open_circuit: '开路故障',
+  Normal: '正常',
+  'Partial Shading 1': '阴影故障 1',
+  'Partial Shading 2': '阴影故障 2',
+  'Partial Shading 3': '阴影故障 3',
+  'Short Circuit 1': '短路故障 1',
+  'Short Circuit 2': '短路故障 2',
+  'Degradation 1': '老化故障 1',
+  'Degradation 2': '老化故障 2',
+  'Open Circuit': '开路故障'
 };
 
 export const initCurSelValue: IMyCurSelFormParam = {
@@ -165,5 +185,66 @@ export const flowchartContent: IFlowchartItem[] = [
       '在反向传播过程中，通过Adam优化算法对权重和偏差进行更新，最终得到的ResNet模型即为最优模型.'
     ],
     imgUrl: 'modeling_flowchart_gaitubao_800x800.png'
+  }
+];
+
+export const modelIntroduction: IModelStructure[] = [
+  {
+    title: 'CNN',
+    imgUrl: require('./static/img/PV_IMAGE/CNN.png'),
+    detail:
+      '所用于比较的CNN受到VGG和AlexNet的启发,其由二维卷积层,池化层和全连接层组成.在此结构中,我们为了保证维度的匹配,而使该网络能够更深层次的自动提取网络参数,我们将部分二维的卷积层通过一维卷积层进行替代'
+  },
+  {
+    title: 'ResNet',
+    imgUrl: require('./static/img/PV_IMAGE/ResNet.png'),
+    detail: `
+    所用到ResNet的输入矩阵大小为40 * 4, 该网络的输出为1 * 9矩阵,
+    该ReNet在特征压缩部分由一个二维残差模块和一个二维卷积层组成. 
+    之后由6个一维残差模块进行特征提取, 其中在第二和第三个残差模块之间添加了平均池化层.
+    最后,为了维度匹配在线性分类器之前,我们添加了另一个平均池化层来完成维度的匹配. 最终,通过线性分类器获得输出结果
+    `
+  },
+  {
+    title: 'CAE',
+    imgUrl: require('./static/img/PV_IMAGE/CAE.png'),
+    detail: `对于所对比卷积自编码网络，该网络通过编码器和解码器来进行特征的压缩提取，然后将所得到的特征图通过线性分类其进行分类，最终得到1 * 9的输出结果，得到最终的预测结果．
+    反卷积层作为卷积操作的反操作，用来产生原有的特征图，通过比较生成的特征图和原有的特征图对比，优化其误差，最终得到最优的压缩特征．
+    `
+  }
+];
+
+export const deSwiperData: IImgSwiper[] = [
+  {
+    title: '[实测]实验室光伏面板',
+    imgUrl: 'PV_array_gaitubao_2427x1456.jpg'
+  },
+  {
+    title: '[实测]老化故障模拟',
+    imgUrl: 'DE_gaitubao_2427x1456.jpg'
+  },
+  {
+    title: '[实测]开路故障模拟',
+    imgUrl: 'OC_gaitubao_2427x1456.jpg'
+  },
+  {
+    title: '[实测]短路故障模拟',
+    imgUrl: 'SC_gaitubao_2427x1456.jpg'
+  },
+  {
+    title: '[实测]阴影故障模拟',
+    imgUrl: 'Shading_gaitubao_2427x1456.jpg'
+  },
+  {
+    title: '[模拟]光伏组件',
+    imgUrl: 'PV_module_model.png'
+  },
+  {
+    title: '[模拟]单二极管模型',
+    imgUrl: 'Single_diode_model.png'
+  },
+  {
+    title: '[模拟]模拟阵列模型',
+    imgUrl: 'Simulation_model.png'
   }
 ];

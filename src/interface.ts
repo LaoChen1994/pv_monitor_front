@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { IBreadcrumbItemProps } from 'zent';
 import { FullLngLatPos } from 'react-amap';
+import { faultTypes } from './constant';
 
 interface ICount {
   count: number;
@@ -96,7 +97,34 @@ export interface TDetailFault {
   degradation_1: string;
   degradation_2: string;
   open_circuit: string;
+  Normal: string;
+  'Partial Shading 1': string;
+  'Partial Shading 2': string;
+  'Partial Shading 3': string;
+  'Short Circuit 1': string;
+  'Short Circuit 2': string;
+  'Degradation 1': string;
+  'Degradation 2': string;
+  'Open Circuit': string;
 }
+
+export interface IFaultNumberList {
+  trueData: boolean;
+  fault_type: keyof TDetailFault;
+  count: number;
+  faultId: number;
+}
+
+export interface IFaultNumberRes {
+  expDataCount: number;
+  simDataCount: number;
+  faultNumber: IFaultNumberList[];
+  total: number;
+}
+
+export type TQueryFaultNumber = () => Promise<
+  ICommonApiInterface<IFaultNumberRes>
+>;
 
 export interface IGetDataDistribute {
   data: [number, number, number][];
@@ -304,9 +332,88 @@ export interface IDialogDetail {
   content?: string;
 }
 
-export interface IFlowchartItem {
+export interface IImgSwiper {
   title: string;
-  detail: string[];
-  // dialogContent?: IDialogDetail;
   imgUrl: string;
+}
+
+export interface IFlowchartItem extends IImgSwiper {
+  detail: string[];
+}
+
+export interface IDetectionForm {
+  model?: 'ResNet' | 'CAE' | 'CNN';
+  dataType?: 'simulated' | 'measured';
+  id?: number;
+  chartType?: 'radar' | 'polygon' | 'line';
+}
+
+export interface IGetFormValue<T> {
+  (value: keyof T): void;
+  (): T;
+}
+
+export interface ICommonForm<T> {
+  // getFormValue: (value: keyof T) => void;
+  getFormValue: IGetFormValue<T>;
+  setFormValue: (name: keyof T, value: T[keyof T]) => void;
+}
+
+export interface IDetectOptions {
+  value: IDetectionForm['dataType'] | IDetectionForm['model'];
+  eText: string;
+  cText: string;
+}
+
+export interface IDetecOptionRes {
+  dataTypes: IDetectOptions[];
+  modelTypes: IDetectOptions[];
+}
+
+export type TGetDetectOptions = () => Promise<
+  ICommonApiInterface<IDetecOptionRes>
+>;
+
+export interface IGetDetectRes {
+  status: boolean;
+  data: string;
+}
+
+export type TGetDetectionResById = (
+  model: IDetectionForm['model'],
+  dataType: IDetectionForm['dataType'],
+  id: number
+) => Promise<ICommonApiInterface<IGetDetectRes>>;
+
+export interface IGetAlgorithmAcc {
+  name: string;
+  samples: string;
+  accuracy: string;
+  frontendText: keyof typeof faultTypes;
+}
+
+export type TGetAlgorithmAcc = (
+  model: IDetectionForm['model'],
+  data: IDetectionForm['dataType']
+) => Promise<ICommonApiInterface<{ data: IGetAlgorithmAcc[] }>>;
+
+export interface IDetectRadarData {
+  faultName: string;
+  accuracy: number;
+  modelName: string;
+}
+
+export interface IQueryChartAcc {
+  name: IDetectionForm['model'];
+  value: string[];
+}
+
+export type TGetChartAcc = (
+  type: 'Sim' | 'true'
+) => Promise<ICommonApiInterface<{ data: IQueryChartAcc[] }>>;
+
+export interface IModelStructure {
+  imgUrl: string;
+  detail: string;
+  title: string;
 }

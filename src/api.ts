@@ -12,9 +12,15 @@ import {
   TGetModelCurveQuantity,
   moduleType,
   TGetModelResById,
-  TGetDataDistrib
+  TGetDataDistrib,
+  TQueryFaultNumber,
+  TGetDetectOptions,
+  TGetDetectionResById,
+  TGetAlgorithmAcc,
+  TGetChartAcc
 } from './interface';
 import { filterParamInObj } from './utils';
+import { type } from 'os';
 
 const HOST = 'http://127.0.0.1:8000/iv';
 Axios.defaults.headers.post['Content-Type'] =
@@ -55,6 +61,12 @@ export const getMoDataDis: TGetDataDistrib = async module => {
       module
     }
   });
+};
+
+export const getDetectOptions: TGetDetectOptions = async () => {
+  const { data } = await getToken();
+  const { token: csrfmiddlewaretoken } = data;
+  return Axios.get(`${HOST}/query_detect_form_options`);
 };
 
 // @ts-ignore
@@ -154,6 +166,58 @@ export const getModelResById: TGetModelResById = async (
       module,
       curveId,
       csrfmiddlewaretoken: token
+    }
+  });
+};
+
+export const getFaultNumber: TQueryFaultNumber = async () => {
+  const { data } = await getToken();
+  const { token: csrfmiddlewaretoken } = data;
+
+  return Axios.get(`${HOST}/query_fault_number`, {
+    params: { csrfmiddlewaretoken }
+  });
+};
+
+export const getDetectResById: TGetDetectionResById = async (
+  model,
+  dataType,
+  id
+) => {
+  const { data } = await getToken();
+  const { token: csrfmiddlewaretoken } = data;
+
+  return Axios.get(`${HOST}/detectCurveById`, {
+    params: {
+      model,
+      dataType,
+      id,
+      csrfmiddlewaretoken
+    }
+  });
+};
+
+export const getAlgorithmAcc: TGetAlgorithmAcc = async (model, data) => {
+  const { data: tokenData } = await getToken();
+  const { token: csrfmiddlewaretoken } = tokenData;
+
+  return Axios.get(`${HOST}/cal_algorithm_accuracy`, {
+    params: {
+      csrfmiddlewaretoken,
+      model,
+      data
+    }
+  });
+};
+
+export const queryChartAcc: TGetChartAcc = async type => {
+  const { data: tokenData } = await getToken();
+  const { token: csrfmiddlewaretoken } = tokenData;
+
+  return Axios.get(`${HOST}/query_chart_accuracy`, {
+    params: {
+      csrfmiddlewaretoken,
+      type
     }
   });
 };
