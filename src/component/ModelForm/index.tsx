@@ -3,7 +3,8 @@ import {
   IModelingForm,
   IOptions,
   ISelectionOpt,
-  IDataTypeOpt
+  IDataTypeOpt,
+  ICommonForm
 } from '../../interface';
 import styles from './style.module.scss';
 import { getModeOptions } from '../../api';
@@ -15,9 +16,7 @@ import {
 } from '../../component/FormComponent//MySelect';
 import { Button } from 'zent';
 
-interface Props {
-  getFormValue: (value?: keyof IModelingForm) => void;
-  setFormValue: (name: keyof IModelingForm, value: any) => void;
+interface Props extends ICommonForm<IModelingForm> {
   initFormValue?: IModelingForm;
   getCurveNum?: () => void;
   getModelData?: () => void;

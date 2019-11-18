@@ -1,10 +1,5 @@
 import { useState } from 'react';
 import { get, omit } from 'lodash';
-
-interface IUseForm<T = any> {
-  (initValue: T): void;
-}
-
 interface ITest {
   name: string;
   age: number;

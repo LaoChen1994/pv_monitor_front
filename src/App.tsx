@@ -84,20 +84,21 @@ const App: React.FC = () => {
           <div className={cx({ [styles.header]: true })}>
             <Breadcrumb breads={breads}></Breadcrumb>
           </div>
-          <BlockLoading
-            icon="circle"
-            iconText="页面加载中,请稍等"
-            iconSize={64}
-            loading={isLoading}
-          >
-            <Switch>
-              <div className={cx({ [styles.wrapper]: true })}>
+
+          <Switch>
+            <div className={cx({ [styles.wrapper]: true })}>
+              <BlockLoading
+                icon="circle"
+                iconText="页面加载中,请稍等"
+                iconSize={64}
+                loading={isLoading}
+              >
                 {routes.map((elem, index) => renderNavItem(elem, index))}
-                {/* 这个空标签不能删 */}
-                <div className={cx({ [styles.push]: true })}></div>
-              </div>
-            </Switch>
-          </BlockLoading>
+              </BlockLoading>
+              {/* 这个空标签不能删 */}
+              <div className={cx({ [styles.push]: true })}></div>
+            </div>
+          </Switch>
 
           <div className={cx({ [styles.footer]: true })}>
             <Footer />

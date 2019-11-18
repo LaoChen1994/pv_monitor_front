@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './style.module.scss';
 import cx from 'classnames';
-import { throttle } from 'lodash';
+import { throttle, debounce } from 'lodash';
 
 interface Props {
   width?: number | string;
@@ -32,6 +32,7 @@ export const Drawer: React.FC<Props> = props => {
         padding: typeof padding === 'string' ? padding : padding + 'px',
         top: scrolTop + 'px'
       }}
+      onMouseLeave={debounce(() => setShow(false), 300)}
     >
       <div className={styles.toggle} onClick={() => setShow(!isShow)}>
         {isShow ? '收起' : '展开'}

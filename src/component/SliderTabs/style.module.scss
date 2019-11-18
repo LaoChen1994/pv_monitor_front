@@ -1,0 +1,58 @@
+@import "../../sass/minxin.scss";
+
+.wrapper {
+  width: 100%;
+  text-align: left;
+  height: 100%;
+}
+
+.tabWrapper {
+  overflow: hidden;
+  overflow-x: auto;
+  border: 1px solid $blue;
+  border-radius: 4px 4px 0 0;
+  display: inline-block;
+  position: relative;
+  margin-bottom: -4px;
+  border-bottom-color: #fff;
+}
+
+.tabs {
+  display: inline-block;
+  padding: 10px 20px;
+  color: $blue;
+  transition: all 0.5s ease;
+
+  &.show {
+    background: $blue;
+    color: #fff;
+  }
+}
+
+.content {
+  width: 100%;
+  border: 1px solid $blue;
+  border-radius: 0 4px 4px 4px;
+  height: calc(100% - 60px);
+  padding: 10px;
+}
+
+.contentItem {
+  margin: 0 auto;
+  display: none;
+
+  &.show {
+    display: inline-block;
+    height: 100%;
+  }
+}
+
+.subtitle {
+  @extend ._subtitle;
+}
+
+.textContent {
+  @extend ._content_text;
+  text-indent: 30px;
+  margin-top: 20px;
+}
